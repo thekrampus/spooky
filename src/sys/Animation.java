@@ -10,25 +10,25 @@ import java.awt.image.BufferedImage;
 public class Animation {
 	private BufferedImage sheet;
 	protected int width, height, frameCount, key, slowdown, subkey, row;
-
-	public Animation(BufferedImage spritesheet, int numRows, int numFrames) {
+	
+	public Animation(BufferedImage spritesheet, int row, int length, int fWidth, int fHeight) {
 		sheet = spritesheet;
 		key = subkey = 0;
-		frameCount = numFrames;
-		width = sheet.getWidth() / frameCount;
-		height = sheet.getHeight() / numRows;
+		frameCount = length;
+		width = fWidth;
+		height = fHeight;
 		slowdown = 0;
-		row = 0;
+		this.row = row;
 	}
 
-	public Animation(BufferedImage spritesheet, int numRows, int numFrames, int slow) {
+	public Animation(BufferedImage spritesheet, int row, int length, int fWidth, int fHeight, int slow) {
 		sheet = spritesheet;
 		key = subkey = 0;
-		frameCount = numFrames;
-		width = sheet.getWidth() / frameCount;
-		height = sheet.getHeight() / numRows;
+		frameCount = length;
+		width = fWidth;
+		height = fHeight;
 		slowdown = slow;
-		row = 0;
+		this.row = row;
 	}
 
 	public BufferedImage getFrame(int frame) {

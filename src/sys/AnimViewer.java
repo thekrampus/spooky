@@ -1,10 +1,8 @@
 package sys;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class AnimViewer {
@@ -32,7 +31,7 @@ public class AnimViewer {
 		open.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser jfc = new JFileChooser();
+				JFileChooser jfc = new JFileChooser(".");
 				if (jfc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					open(jfc.getSelectedFile());
 				}
@@ -43,18 +42,18 @@ public class AnimViewer {
 		JMenuBar mb = new JMenuBar();
 		mb.add(file);
 		frame.setJMenuBar(mb);
-		
+
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
 			protected void paintComponent(Graphics g) {
 				g.clearRect(0, 0, 700, 700);
-				
-				if(anim != null)
+
+				if (anim != null)
 					g.drawImage(anim.getNextFrame(), 200, 200, null);
 				else
 					g.drawString("HEY LOAD AN ANIMATION YA DUMMY", 200, 200);
-				
+
 				try {
 					long wait = timer - System.currentTimeMillis();
 					if (wait > 0)
@@ -64,19 +63,24 @@ public class AnimViewer {
 					e.printStackTrace();
 					System.out.println("How on earth did this happen? Yell at the dev!");
 				}
-				repaint();
 			}
 		};
 		frame.add(panel);
-		
+
 		frame.setVisible(true);
+
+		while (true) {
+			frame.repaint();
+		}
 	}
 
 	public static void open(File f) {
 		try {
 			BufferedImage img = ImageIO.read(f);
-			String s[] = f.getName().split("_")[1].split(".")[0].split("x"); // could probably do this with a regex
-			anim = new Animation(img, Integer.parseInt(s[0]), Integer.parseInt(s[1]));
+			// String s[] = f.getName().split("-")[1].split("x"); // could probably do this with a regex
+			String[] params = JOptionPane.showInputDialog("Enter the image loading params!!", "width,height,row,length,slowdown").split(",");
+			anim = new Animation(img, Integer.parseInt(params[2]), Integer.parseInt(params[3]), Integer.parseInt(params[0]),
+					Integer.parseInt(params[1]), Integer.parseInt(params[4]));
 		} catch (IOException e) {
 			System.out.println("FUCKIN THING SUCKS");
 			e.printStackTrace();
