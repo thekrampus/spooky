@@ -7,6 +7,10 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import ent.Player;
+
+import world.Level;
+
 public class Game extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final long framediff = 1000L / 100L;
@@ -14,6 +18,9 @@ public class Game extends JFrame {
 	private BufferStrategy buffer;
 	private KeyCap keys;
 	private boolean running = true; // Set this to false when you decide the game is over!
+
+	private Level level;
+	private Player[] players;
 
 	public Game() {
 		super("SPOOKY DUNGEON REVENGE v3");
@@ -39,6 +46,13 @@ public class Game extends JFrame {
 		// initialize frame buffer
 		this.createBufferStrategy(2);
 		buffer = this.getBufferStrategy();
+
+		level = Level.buildDebug();
+		level.buildHitbox();
+
+		players = new Player[4];
+		players[0] = new Player.DebugPlayer(3, 3);
+		level.addEntity(players[0]);
 	}
 
 	/**
@@ -76,7 +90,9 @@ public class Game extends JFrame {
 		g2d.clearRect(0, 0, 1024, 768);
 
 		// draw things
-		g2d.drawString("SPOOKY DUNGEON - pre-alpha available to paying customers only!!", 100, 200);
+		// g2d.drawString("SPOOKY DUNGEON - pre-alpha available to paying customers only!!", 100, 200);
+		g2d.translate(200, 200);
+		level.draw(g2d);
 
 		g2d.dispose();
 
@@ -89,16 +105,16 @@ public class Game extends JFrame {
 	 * Throw players at game
 	 */
 	private void logic() {
-		// TODO Auto-generated method stub
-
+		level.update();
 	}
 
 	/**
 	 * Throw input polling at players
 	 */
 	private void input() {
-		// TODO Auto-generated method stub
-
+		for (Player p : players)
+			if (p != null)
+				p.handleInput(keys);
 	}
 
 }

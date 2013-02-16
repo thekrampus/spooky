@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public class Animation {
 	private BufferedImage sheet;
 	protected int width, height, frameCount, key, slowdown, subkey, row;
-	
+
 	public Animation(BufferedImage spritesheet, int row, int length, int fWidth, int fHeight) {
 		sheet = spritesheet;
 		key = subkey = 0;
@@ -47,7 +47,7 @@ public class Animation {
 		}
 		return frame;
 	}
-	
+
 	public BufferedImage getCurrentFrame() {
 		return this.getFrame(key);
 	}
@@ -55,11 +55,11 @@ public class Animation {
 	public int getLength() {
 		return frameCount;
 	}
-	
+
 	public void setRow(int r) {
 		row = r;
 	}
-	
+
 	public void reset() {
 		key = subkey = 0;
 	}
