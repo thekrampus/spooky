@@ -18,7 +18,7 @@ public class AssetLib {
 	public static void load() throws IOException {
 		SHEET_SKELLY = loadImage("data/skeleton-optimized.png");
 		TILE_STONE = loadImage("data/tile-stone.png");
-		TILE_STONEWALL = loadImage("data/stonewall-2.png");
+		TILE_STONEWALL = loadImage("data/stonewall-3.png");
 	}
 
 	public static BufferedImage loadImage(String path) throws IOException {
