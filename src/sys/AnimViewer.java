@@ -1,5 +1,6 @@
 package sys;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +26,7 @@ public class AnimViewer {
 	public static void main(String[] args) {
 		frame = new JFrame("Animation Viewer!");
 		frame.setSize(700, 700);
+		frame.setBackground(Color.cyan);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JMenuItem open = new JMenuItem("Open");
