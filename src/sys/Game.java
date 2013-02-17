@@ -123,5 +123,4 @@ public class Game extends JFrame {
 			if (p != null)
 				p.handleInput(keys);
 	}
-
 }

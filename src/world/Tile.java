@@ -8,13 +8,16 @@ import java.io.Serializable;
 
 import sys.AssetLib;
 
-public enum Tile implements Serializable{
+public enum Tile implements Serializable {
 	EMPTY, FLOOR, WALL;
-	
+
 	public static final int TILE_WIDTH = 160, TILE_HEIGHT = 80; // default size of tiles
-	
+
 	public static Area getHitbox(Tile t, int x, int y) {
-		switch(t) {
+		if (t == null)
+			return new Area();
+
+		switch (t) {
 		case EMPTY:
 		case WALL:
 			return new Area();
@@ -25,17 +28,20 @@ public enum Tile implements Serializable{
 			return null;
 		}
 	}
-	
+
 	public static void draw(Tile t, Graphics2D g, int x, int y) {
+		if (t == null)
+			return;
+
 		int[] c = Tile.getScreenCoords(x, y);
 		int width = TILE_WIDTH;
 		int height = TILE_HEIGHT;
 		BufferedImage sprite = null;
-		switch(t) {
+		switch (t) {
 		case EMPTY:
-			return; //I'm invisible!!
+			return; // I'm invisible!!
 		case FLOOR:
-			sprite = AssetLib.TILE_STONE.getSubimage(0, TILE_HEIGHT*(int)(Math.random()*3), TILE_WIDTH, TILE_HEIGHT);
+			sprite = AssetLib.TILE_STONE.getSubimage(0, TILE_HEIGHT * (int) (Math.random() * 3), TILE_WIDTH, TILE_HEIGHT);
 			break;
 		case WALL:
 			sprite = AssetLib.TILE_STONEWALL;
@@ -45,17 +51,34 @@ public enum Tile implements Serializable{
 			System.out.println("Not sure what to draw with this kind of tile!");
 			return;
 		}
-		
-		g.drawImage(sprite, c[0], c[1]-(height-TILE_HEIGHT), width, height, null);
+
+		g.drawImage(sprite, c[0], c[1] - (height - TILE_HEIGHT), width, height, null);
 	}
-	
+
+	public static BufferedImage getSprite(Tile t) {
+		if (t == null)
+			return AssetLib.TILE_NULL;
+		switch (t) {
+		case EMPTY:
+			return AssetLib.TILE_NULL;
+		case FLOOR:
+			return AssetLib.TILE_STONE.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
+		case WALL:
+			return AssetLib.TILE_STONEWALL;
+		default:
+			System.out.println("Not sure what sprite this is!");
+			return AssetLib.TILE_NULL;
+		}
+
+	}
+
 	/**
-	 * Translate isomorphic coordinates to screen coordinates
+	 * Translate isometric coordinates to screen coordinates
 	 * 
 	 * @param isoX
-	 *            Isomorphic X coord
+	 *            Isometric X coord
 	 * @param isoY
-	 *            Isomorphic Y coord
+	 *            Isometric Y coord
 	 * @return Array of screen X coord, screen Y coord
 	 */
 	public static int[] getScreenCoords(double isoX, double isoY) {
@@ -63,6 +86,15 @@ public enum Tile implements Serializable{
 		c[0] = (int) ((isoY * TILE_WIDTH / 2) + (isoX * TILE_WIDTH / 2));
 		c[1] = (int) ((isoX * TILE_HEIGHT / 2) - (isoY * TILE_HEIGHT / 2));
 
+		return c;
+	}
+
+	public static double[] getIsoCoords(double screenX, double screenY) {
+		double[] c = new double[2];
+		c[0] = ((screenY * 2.0 / (double) TILE_HEIGHT) + (screenX / (double) TILE_WIDTH))/2.0;
+		c[1] = (screenY * 2.0 / (double) TILE_HEIGHT) - c[0];
+//		c[0] = (double) screenY / (double) TILE_HEIGHT + (double) screenX / (2.0 * (double) TILE_WIDTH);
+//		c[1] = (double) screenY / (double) TILE_HEIGHT - (double) screenX / (2.0 * (double) TILE_WIDTH);
 		return c;
 	}
 }

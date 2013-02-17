@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AssetLib {
-	public static BufferedImage SHEET_SKELLY, TILE_STONE, TILE_STONEWALL;
+	public static BufferedImage SHEET_SKELLY, TILE_STONE, TILE_STONEWALL, TILE_NULL;
 
 	/**
 	 * Batch load all external assets needed in-game
@@ -19,6 +19,7 @@ public class AssetLib {
 		SHEET_SKELLY = loadImage("data/skeleton-optimized.png");
 		TILE_STONE = loadImage("data/tile-stone.png");
 		TILE_STONEWALL = loadImage("data/stonewall-2.png");
+		TILE_NULL = loadImage("data/tile-null.png");
 	}
 
 	public static BufferedImage loadImage(String path) throws IOException {

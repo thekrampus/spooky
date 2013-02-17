@@ -3,6 +3,11 @@ package world;
 import java.awt.Graphics2D;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -14,6 +19,10 @@ public class Level {
 	private ArrayList<Entity> entities;
 	private BufferedImage background;
 	private int bgOffset;
+
+	public Level() {
+		entities = new ArrayList<Entity>();
+	}
 
 	public Level(int size) {
 		tiles = new Tile[size][size];
@@ -30,16 +39,6 @@ public class Level {
 	 *            Graphics object to draw with
 	 */
 	public void draw(Graphics2D g) {
-		// for(int i = 0; i < tiles.length; i++) {
-		// for(int j = tiles[i].length-1; j >= 0; j--) {
-		// Tile.draw(tiles[i][j], g, i, j);
-		//
-		// for(Entity e : entities) {
-		// if(e.checkPosition(i, j))
-		// e.draw(g);
-		// }
-		// }
-		// }
 		g.drawImage(background, 0, -bgOffset, null);
 
 		for (Entity e : entities) {
@@ -102,16 +101,39 @@ public class Level {
 	}
 
 	public static Level buildDebug() {
-		int debugSize = 6;
-		Level l = new Level(debugSize);
-		for (int j = 0; j < debugSize; j++)
-			l.setTile(0, j, Tile.WALL);
-		for (int i = 1; i < debugSize; i++) {
-			for (int j = 0; j < debugSize; j++) {
-				l.setTile(i, j, Tile.FLOOR);
-			}
-		}
-
+		// int debugSize = 6;
+		// Level l = new Level(debugSize);
+		// for (int j = 0; j < debugSize; j++)
+		// l.setTile(0, j, Tile.WALL);
+		// for (int i = 1; i < debugSize; i++) {
+		// for (int j = 0; j < debugSize; j++) {
+		// l.setTile(i, j, Tile.FLOOR);
+		// }
+		// }
+		Level l = new Level();
+		l.loadLevel(new File("data/levels/debug.lvl"));
 		return l;
+	}
+
+	/**
+	 * Load a tile matrix from a file!
+	 * 
+	 * @param f
+	 *            File to load
+	 * @return true if file loaded successfully
+	 */
+	public boolean loadLevel(File f) {
+		try {
+			ObjectInput in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
+			tiles = (Tile[][]) in.readObject();
+
+			in.close();
+		} catch (Exception e) {
+			System.out.println("Couldn't open file!");
+			e.printStackTrace();
+			return false;
+		}
+		System.out.println("Read from file successfully!");
+		return true;
 	}
 }
