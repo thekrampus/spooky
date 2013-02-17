@@ -23,8 +23,10 @@ public abstract class Player extends Entity {
 
 		if (keys.key_a) {
 			impulse(-speed, -speed);
+			facingLeft = true;
 		} else if (keys.key_d) {
 			impulse(speed, speed);
+			facingLeft = false;
 		}
 	}
 
@@ -32,9 +34,9 @@ public abstract class Player extends Entity {
 
 		public DebugPlayer(double x, double y) {
 			super(x, y, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10));
-			speed = 0.05;
+			speed = 0.02;
 		}
-		
+
 		public void draw(Graphics2D g) {
 			super.draw(g);
 		}
