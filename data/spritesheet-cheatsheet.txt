@@ -1,0 +1,10 @@
+skeleton-optimized.png: 1 row, dim 258x205
+    arguments: 129,205,0,2,20
+
+ghost.png: 3 rows
+    first row: 415, 315, 0, 4, 20 (probably need to scale the image down)
+    second row: 498, 311, 1, 4, 6
+
+The animation system may need some revision to be able to handle ghost.png
+properly, since some sprites have different sizes, and may not be positioned in
+a height that when divided by itself is zero.
