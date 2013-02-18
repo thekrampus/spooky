@@ -3,9 +3,8 @@ package sys;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class KeyCap implements KeyListener {
-
-	public boolean key_right, key_left, key_up, key_down, key_w, key_a, key_s, key_d, key_q, key_space, key_esc;
+public class KeyCap implements KeyListener, InputMethod{
+	private boolean key_right, key_left, key_up, key_down, key_w, key_a, key_s, key_d, key_q, key_space, key_esc;
 
 	public void keyTyped(KeyEvent e) {
 	}
@@ -86,6 +85,81 @@ public class KeyCap implements KeyListener {
 			break;
 		}
 
+	}
+
+	@Override
+	public double[] stickL() {
+		double[] axes = {0., 0.};
+		if(key_w) {
+			if(key_a) {
+				axes[0] = -.707;
+				axes[1] = -.707;
+			} else if(key_d) {
+				axes[0] = -.707;
+				axes[1] = .707;
+			} else {
+				axes[0] = -1;
+			}
+		} else if(key_s) {
+			if(key_a) {
+				axes[0] = .707;
+				axes[1] = -.707;
+			} else if(key_d) {
+				axes[0] = .707;
+				axes[1] = .707;
+			} else {
+				axes[0] = 1;
+			}
+		} else {
+			axes[1] = (key_a? -1 : 0) + (key_d? 1 : 0);
+		}
+		
+		return axes;
+	}
+
+	@Override
+	public double[] sitckR() {
+		double[] axes = {0., 0.};
+		if(key_up) {
+			if(key_left) {
+				axes[0] = -.707;
+				axes[1] = -.707;
+			} else if(key_right) {
+				axes[0] = -.707;
+				axes[1] = .707;
+			} else {
+				axes[0] = -1;
+			}
+		} else if(key_down) {
+			if(key_left) {
+				axes[0] = .707;
+				axes[1] = -.707;
+			} else if(key_right) {
+				axes[0] = .707;
+				axes[1] = .707;
+			} else {
+				axes[0] = 1;
+			}
+		} else {
+			axes[1] = (key_left? -1 : 0) + (key_right? 1 : 0);
+		}
+		
+		return axes;
+	}
+
+	@Override
+	public boolean attack() {
+		return key_space;
+	}
+
+	@Override
+	public boolean special() {
+		return key_q;
+	}
+
+	@Override
+	public boolean menu() {
+		return key_esc;
 	}
 
 }

@@ -20,6 +20,12 @@ public abstract class Entity {
 		this.xVel = this.yVel = 0;
 	}
 
+	/**
+	 * Act one "tick" of this entity's routine
+	 * 
+	 * @param l
+	 *            the Level the entity is acting in
+	 */
 	public void update(Level l) {
 		xCoord += xVel;
 		if (!l.isInBounds(xCoord, yCoord)) {
@@ -36,6 +42,12 @@ public abstract class Entity {
 			yVel *= FRICTION;
 	}
 
+	/**
+	 * Draw this entity to the screen
+	 * 
+	 * @param g
+	 *            Graphics2D object to draw with
+	 */
 	public void draw(Graphics2D g) {
 		int[] c = Tile.getScreenCoords(xCoord, yCoord);
 		BufferedImage frame = null;
@@ -51,6 +63,14 @@ public abstract class Entity {
 					frame.getHeight(), null);
 	}
 
+	/**
+	 * Kick this entity a given amount on the coordinate axes
+	 * 
+	 * @param dX
+	 *            amount to add to X velocity
+	 * @param dY
+	 *            amount to add to Y velocity
+	 */
 	public void impulse(double dX, double dY) {
 		xVel += dX;
 		yVel += dY;
@@ -59,6 +79,18 @@ public abstract class Entity {
 	public void setCoords(double x, double y) {
 		xCoord = x;
 		yCoord = y;
+	}
+
+	public int[] getScreenCoords() {
+		return Tile.getScreenCoords(xCoord, yCoord);
+	}
+
+	public double getX() {
+		return xCoord;
+	}
+
+	public double getY() {
+		return yCoord;
 	}
 
 	public boolean checkPosition(int x, int y) {

@@ -110,6 +110,7 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 	private Point camera;
 	private int pX, pY; //used for mouse dragging
 	private TileMenu menu;
+	private BufferedImage buffer;
 	
 	public DisplayPanel() {
 		super(false);
@@ -130,6 +131,10 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 			Arrays.fill(row, Tile.FLOOR);
 		camera = new Point(0, Tile.getScreenCoords(size, size)[0] / 2);
 		
+		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles.length)[1]+Tile.TILE_HEIGHT;
+		buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		
 		repaint();
 	}
 	
@@ -146,6 +151,10 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 		}
 		
 		System.out.println("Read from file successfully!");
+		
+		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles.length)[1]+Tile.TILE_HEIGHT;
+		buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		repaint();
 	}
 	
@@ -168,16 +177,16 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		int bgOffset = Tile.getScreenCoords(tiles.length, tiles.length)[0] / 2;
-		BufferedImage buffer = new BufferedImage(2 * bgOffset, 2 * bgOffset, BufferedImage.TYPE_INT_ARGB);
+		
 		Graphics2D g2d = buffer.createGraphics();
-		g2d.translate(0, bgOffset);
+		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		g2d.translate(0, buffer.getHeight()/2);
 		for (int i = 0; i < tiles.length; i++)
 			for (int j = tiles[i].length - 1; j >= 0; j--)
 				Tile.draw(tiles[i][j], g2d, i, j);
 
 		g.translate(camera.x, camera.y);
-		g.drawImage(buffer, 0, -bgOffset-Tile.TILE_HEIGHT/2, null);
+		g.drawImage(buffer, 0, -buffer.getHeight()/2-Tile.TILE_HEIGHT/2, null);
 		
 		//draw grid
 		g.setColor(Color.red);
@@ -189,6 +198,9 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 			p2 = Tile.getScreenCoords(tiles.length, i);
 			g.drawLine(p1[0], p1[1], p2[0], p2[1]);
 		}
+		
+
+		g.dispose();
 		
 	}
 	

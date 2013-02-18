@@ -44,6 +44,17 @@ public class Level {
 		for (Entity e : entities) {
 			e.draw(g);
 		}
+		
+//		for (int i = 0; i < tiles.length; i++) {
+//			for (int j = tiles[i].length - 1; j >= 0; j--) {
+//				Tile.draw(tiles[i][j], g, i, j);
+//				
+//				for(Entity e : entities) {
+//					if(e.checkPosition(i, j))
+//						e.draw(g);
+//				}
+//			}
+//		}
 	}
 
 	public void setTile(int x, int y, Tile tile) {
@@ -81,7 +92,7 @@ public class Level {
 	 *            isometric X coord
 	 * @param y
 	 *            isometric Y coord
-	 * @return true if the given poin is within level boundaries
+	 * @return true if the given point is within level boundaries
 	 */
 	public boolean isInBounds(double x, double y) {
 		return hitbox.contains(x, y);
@@ -101,17 +112,8 @@ public class Level {
 	}
 
 	public static Level buildDebug() {
-		// int debugSize = 6;
-		// Level l = new Level(debugSize);
-		// for (int j = 0; j < debugSize; j++)
-		// l.setTile(0, j, Tile.WALL);
-		// for (int i = 1; i < debugSize; i++) {
-		// for (int j = 0; j < debugSize; j++) {
-		// l.setTile(i, j, Tile.FLOOR);
-		// }
-		// }
 		Level l = new Level();
-		l.loadLevel(new File("data/levels/debug.lvl"));
+		l.loadLevel(new File("data/levels/debug-big.lvl"));
 		return l;
 	}
 

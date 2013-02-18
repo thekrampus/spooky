@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
 import world.Level;
+import world.Tile;
 import ent.Player;
 
 public class Game extends JFrame {
@@ -20,11 +23,16 @@ public class Game extends JFrame {
 	private boolean running = true; // Set this to false when you decide the game is over!
 
 	private Level level;
-	private Player[] players;
+	//private static Player[] players;
+	private static ArrayList<Player> players;
+
+	private static Rectangle cambox;
+	private static final int CAM_BUFFER = 100; // How close a player needs to be to the edge of the screen to start panning
 
 	public Game() {
 		super("SPOOKY DUNGEON REVENGE v3");
 
+		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setUndecorated(true);
@@ -40,6 +48,7 @@ public class Game extends JFrame {
 		this.addKeyListener(keys);
 		this.requestFocus();
 
+		// initialize frame-lock
 		timer = System.currentTimeMillis();
 		mspf = 1;
 		this.setVisible(true);
@@ -48,13 +57,16 @@ public class Game extends JFrame {
 		this.createBufferStrategy(2);
 		buffer = this.getBufferStrategy();
 
+		// initialize level
 		level = Level.buildDebug();
 		level.buildHitbox();
 		level.buildBackground();
 
-		players = new Player[4];
-		players[0] = new Player.DebugPlayer(1, 1);
-		level.addEntity(players[0]);
+		players = new ArrayList<Player>();
+		players.add(new Player.DebugPlayer(2, 1, keys));
+		level.addEntity(players.get(0));
+
+		cambox.setLocation(100, -200);
 	}
 
 	/**
@@ -90,17 +102,20 @@ public class Game extends JFrame {
 	 */
 	private void draw() {
 		Graphics2D g2d = (Graphics2D) buffer.getDrawGraphics(); // Graphics object to draw with
-		g2d.clearRect(0, 0, 1024, 768);
+		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+		// draw fps counter
+		g2d.setColor(Color.blue);
+		g2d.drawString("FPS: " + (1000 / mspf), 20, 20);
 
 		// draw things
 		// g2d.drawString("SPOOKY DUNGEON - pre-alpha available to paying customers only!!", 100, 200);
-		g2d.translate(200, 300);
+		g2d.translate(-(cambox.getX() - CAM_BUFFER), -(cambox.getY() - CAM_BUFFER));
+
+		g2d.drawRect((int) cambox.getX(), (int) cambox.getY(), cambox.width, cambox.height);
+		// g2d.translate(200, 300);
 		level.draw(g2d);
 
-		//draw fps counter
-		g2d.setColor(Color.blue);
-		g2d.drawString("FPS: " + (1000/mspf), 0, 0);
-		
 		g2d.dispose();
 
 		// draw buffer to screen if it's ready
@@ -120,7 +135,105 @@ public class Game extends JFrame {
 	 */
 	private void input() {
 		for (Player p : players)
-			if (p != null)
-				p.handleInput(keys);
+			p.handleInput();
+	}
+
+	@Deprecated
+	/**
+	 * Given the x and y screen coords of an entity to track, attempts to pan the camera suitably, and if that's impossible to resolve with
+	 * other tracked entities then returns false
+	 * 
+	 * @param x
+	 *            X screen coordinate of tracked entity
+	 * @param y
+	 *            Y screen coordinate of tracked entity
+	 * @return false if the camera cannot be resolved
+	 */
+	public static boolean trackCam(double x, double y) {
+		int[] c = Tile.getScreenCoords(x, y);
+		System.out.println("player: " + c[0] + "," + c[1] + " cam: " + cambox.getX() + "," + cambox.getY());
+		double dX = 0;
+		if (c[0] < cambox.getX())
+			dX = c[0] - cambox.getX();
+		else if (c[0] > cambox.getMaxX())
+			dX = c[0] - cambox.getMaxX();
+
+		double dY = 0;
+		if (c[1] < cambox.getY())
+			dY = c[1] - cambox.getY();
+		else if (c[1] > cambox.getMaxY())
+			dY = c[1] - cambox.getMaxY();
+
+		cambox.translate((int) dX, (int) dY);
+
+		for (Player p : players) {
+			int[] pc = p.getScreenCoords();
+			if (!cambox.contains(pc[0], pc[1])) {
+				System.out.println("Can't pan cam! " + pc[0] + ", " + pc[1]);
+				cambox.translate((int) -dX, (int) -dY);
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Pans the camera, but only does checking on the X axis. Better for how we're doing seperate-axis integration
+	 * 
+	 * @param x
+	 *            X coordinate of the tracked entity
+	 * @param y
+	 *            Y coordinate of the tracked entity
+	 * @return false if the camera cannot be resolved
+	 */
+	public static boolean panX(double x, double y) {
+		double s = (y * Tile.TILE_WIDTH / 2) + (x * Tile.TILE_WIDTH / 2);
+		double d = 0;
+		if (s < cambox.getX())
+			d = s - cambox.getX();
+		else if (s > cambox.getMaxX())
+			d = s - cambox.getMaxX();
+
+		cambox.x += d;
+		
+//		for(Player p : players) {
+//			int[] c = p.getScreenCoords();
+//			if(!cambox.contains(c[0], c[1])) {
+//				System.out.println("Can't pan cam!!");
+//				cambox.translate((int) -d, 0);
+//				return false;
+//			}
+//		}
+
+		return true;
+	}
+
+	/**
+	 * Pans the camera, but only does checking on the Y axis. Better for how we're doing seperate-axis integration
+	 * 
+	 * @param x
+	 *            X coordinate of the tracked entity
+	 * @param y
+	 *            Y coordinate of the tracked entity
+	 * @return false if the camera cannot be resolved
+	 */
+	public static boolean panY(double x, double y) {
+		double s = (x * Tile.TILE_HEIGHT / 2) - (y * Tile.TILE_HEIGHT / 2);
+		double d = 0;
+		if (s < cambox.getY())
+			d = s - cambox.getY();
+		else if (s > cambox.getMaxY())
+			d = s - cambox.getMaxY();
+
+		cambox.y += d;
+
+		return true;
+	}
+
+	@Override
+	public void setSize(int width, int height) {
+		super.setSize(width, height);
+		cambox.setSize(width - 2 * CAM_BUFFER, height - 2 * CAM_BUFFER);
 	}
 }
