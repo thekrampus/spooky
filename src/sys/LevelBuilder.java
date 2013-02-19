@@ -206,15 +206,13 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if(e.getButton() == 1) {
-			if(pX != 0 && pY != 0) {
-				camera.x += e.getX() - pX;
-				camera.y += e.getY() - pY;
-				repaint();
-			}
-			pX = e.getX();
-			pY = e.getY();
+		if(pX != 0 && pY != 0) {
+			camera.x += e.getX() - pX;
+			camera.y += e.getY() - pY;
+			repaint();
 		}
+		pX = e.getX();
+		pY = e.getY();
 	}
 	
 	@Override
