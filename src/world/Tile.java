@@ -41,10 +41,10 @@ public enum Tile implements Serializable {
 		case EMPTY:
 			return; // I'm invisible!!
 		case FLOOR:
-			sprite = AssetLib.TILE_STONE.getSubimage(0, TILE_HEIGHT * (int) (Math.random() * 3), TILE_WIDTH, TILE_HEIGHT);
+			sprite = AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, TILE_HEIGHT * (int) (Math.random() * 3), TILE_WIDTH, TILE_HEIGHT);
 			break;
 		case WALL:
-			sprite = AssetLib.TILE_STONEWALL;
+			sprite = AssetLib.TILE_DEFAULT_WALL;
 			height = 240;
 			break;
 		default:
@@ -62,9 +62,9 @@ public enum Tile implements Serializable {
 		case EMPTY:
 			return AssetLib.TILE_NULL;
 		case FLOOR:
-			return AssetLib.TILE_STONE.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
+			return AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		case WALL:
-			return AssetLib.TILE_STONEWALL;
+			return AssetLib.TILE_DEFAULT_WALL;
 		default:
 			System.out.println("Not sure what sprite this is!");
 			return AssetLib.TILE_NULL;
