@@ -34,7 +34,7 @@ public class Game extends JFrame {
 	private static final int CAM_BUFFER = 100; // How close a player needs to be to the edge of the screen to start panning
 
 	public Game() {
-		super("SPOOKY DUNGEON REVENGE v3");
+		super("SPOOKY DUNGEON 2: THE RECKONING");
 
 		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
@@ -268,5 +268,10 @@ public class Game extends JFrame {
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
 		cambox.setSize(width - 2 * CAM_BUFFER, height - 2 * CAM_BUFFER);
+	}
+	
+	public Level getLevel()
+	{
+		return level;
 	}
 }

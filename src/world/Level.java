@@ -12,10 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import sys.Tileset;
 import ent.Entity;
 
 public class Level {
 	private Tile[][] tiles;
+	private Tileset tileset;
 	private Area hitbox;
 	private ArrayList<Entity> entities;
 	private BufferedImage background;
@@ -31,6 +33,12 @@ public class Level {
 
 		for (int i = 0; i < size; i++)
 			Arrays.fill(tiles[i], Tile.EMPTY);
+	}
+	
+	public Level(int size, Tileset tileset)
+	{
+		this(size);
+		this.tileset = tileset;
 	}
 
 	/**
@@ -142,5 +150,10 @@ public class Level {
 		}
 		System.out.println("Read from file successfully!");
 		return true;
+	}
+	
+	public Tileset getTileset()
+	{
+		return tileset;
 	}
 }

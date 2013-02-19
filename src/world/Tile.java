@@ -6,7 +6,7 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-import sys.AssetLib;
+import sys.Launcher;
 
 public enum Tile implements Serializable {
 	EMPTY, FLOOR, WALL;
@@ -41,10 +41,10 @@ public enum Tile implements Serializable {
 		case EMPTY:
 			return; // I'm invisible!!
 		case FLOOR:
-			sprite = AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, TILE_HEIGHT * (int) (Math.random() * 3), TILE_WIDTH, TILE_HEIGHT);
+			sprite = Launcher.game.getLevel().getTileset().floor.getSubimage(0, TILE_HEIGHT * (int) (Math.random()*3), TILE_WIDTH, TILE_HEIGHT);
 			break;
 		case WALL:
-			sprite = AssetLib.TILE_DEFAULT_WALL;
+			sprite = Launcher.game.getLevel().getTileset().wall;
 			height = 240;
 			break;
 		default:
@@ -57,17 +57,17 @@ public enum Tile implements Serializable {
 
 	public static BufferedImage getSprite(Tile t) {
 		if (t == null)
-			return AssetLib.TILE_NULL;
+			return Launcher.game.getLevel().getTileset().blank;
 		switch (t) {
 		case EMPTY:
-			return AssetLib.TILE_NULL;
+			return Launcher.game.getLevel().getTileset().blank;
 		case FLOOR:
-			return AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
+			return Launcher.game.getLevel().getTileset().floor.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		case WALL:
-			return AssetLib.TILE_DEFAULT_WALL;
+			return Launcher.game.getLevel().getTileset().wall;
 		default:
 			System.out.println("Not sure what sprite this is!");
-			return AssetLib.TILE_NULL;
+			return Launcher.game.getLevel().getTileset().blank;
 		}
 
 	}
