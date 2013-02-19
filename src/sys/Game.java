@@ -10,8 +10,12 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import net.java.games.input.Controller;
+import net.java.games.input.Controller.Type;
+import net.java.games.input.ControllerEnvironment;
 import world.Level;
 import world.Tile;
+import ent.Entity;
 import ent.Player;
 
 public class Game extends JFrame {
@@ -23,7 +27,7 @@ public class Game extends JFrame {
 	private boolean running = true; // Set this to false when you decide the game is over!
 
 	private Level level;
-	//private static Player[] players;
+	// private static Player[] players;
 	private static ArrayList<Player> players;
 
 	private static Rectangle cambox;
@@ -47,6 +51,8 @@ public class Game extends JFrame {
 		this.setFocusable(true);
 		this.addKeyListener(keys);
 		this.requestFocus();
+		
+		ArrayList<GamepadCap> gamepads = initControllers();
 
 		// initialize frame-lock
 		timer = System.currentTimeMillis();
@@ -63,10 +69,28 @@ public class Game extends JFrame {
 		level.buildBackground();
 
 		players = new ArrayList<Player>();
-		players.add(new Player.DebugPlayer(2, 1, keys));
-		level.addEntity(players.get(0));
+		players.add(new Player.DebugPlayer(11, 11, keys));
+		players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
+		players.add(new Player.DummyPlayer(8, 8));
+		players.add(new Player.DummyPlayer(11, 8));
 
-		cambox.setLocation(100, -200);
+		for (Player p : players)
+			level.addEntity(p);
+
+		cambox.setLocation(4000, -200);
+	}
+	
+	public static ArrayList<GamepadCap> initControllers() {
+		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		ArrayList<GamepadCap> gp = new ArrayList<GamepadCap>();
+		
+		for(Controller c : controllers) {
+			System.out.println(c.getType());
+			if(c.getType() == Type.GAMEPAD)
+				gp.add(new GamepadCap(c));
+		}
+		
+		return gp;
 	}
 
 	/**
@@ -138,46 +162,45 @@ public class Game extends JFrame {
 			p.handleInput();
 	}
 
-	@Deprecated
 	/**
 	 * Given the x and y screen coords of an entity to track, attempts to pan the camera suitably, and if that's impossible to resolve with
 	 * other tracked entities then returns false
 	 * 
-	 * @param x
-	 *            X screen coordinate of tracked entity
-	 * @param y
-	 *            Y screen coordinate of tracked entity
+	 * @param e
+	 *            Entity being tracked
 	 * @return false if the camera cannot be resolved
 	 */
-	public static boolean trackCam(double x, double y) {
-		int[] c = Tile.getScreenCoords(x, y);
-		System.out.println("player: " + c[0] + "," + c[1] + " cam: " + cambox.getX() + "," + cambox.getY());
+	public static boolean trackCam(Entity e) {
+		int[] c = e.getScreenCoords();
 		double dX = 0;
 		if (c[0] < cambox.getX())
-			dX = c[0] - cambox.getX();
+			dX = c[0] - cambox.getX() - 2;
 		else if (c[0] > cambox.getMaxX())
-			dX = c[0] - cambox.getMaxX();
+			dX = c[0] - cambox.getMaxX() + 2;
 
 		double dY = 0;
 		if (c[1] < cambox.getY())
-			dY = c[1] - cambox.getY();
+			dY = c[1] - cambox.getY() - 3;
 		else if (c[1] > cambox.getMaxY())
-			dY = c[1] - cambox.getMaxY();
+			dY = c[1] - cambox.getMaxY() + 3;
 
 		cambox.translate((int) dX, (int) dY);
 
 		for (Player p : players) {
-			int[] pc = p.getScreenCoords();
-			if (!cambox.contains(pc[0], pc[1])) {
-				System.out.println("Can't pan cam! " + pc[0] + ", " + pc[1]);
-				cambox.translate((int) -dX, (int) -dY);
-				return false;
+			if (p != e) {
+				int[] pc = p.getScreenCoords();
+				if (!cambox.contains(pc[0], pc[1])) {
+					// System.out.println("Can't pan cam! " + pc[0] + ", " + pc[1]);
+					cambox.translate((int) -dX, (int) -dY);
+					return false;
+				}
 			}
 		}
 
 		return true;
 	}
 
+	@Deprecated
 	/**
 	 * Pans the camera, but only does checking on the X axis. Better for how we're doing seperate-axis integration
 	 * 
@@ -193,22 +216,23 @@ public class Game extends JFrame {
 		if (s < cambox.getX())
 			d = s - cambox.getX();
 		else if (s > cambox.getMaxX())
-			d = s - cambox.getMaxX();
+			d = s - cambox.getMaxX() + 1;
 
 		cambox.x += d;
-		
-//		for(Player p : players) {
-//			int[] c = p.getScreenCoords();
-//			if(!cambox.contains(c[0], c[1])) {
-//				System.out.println("Can't pan cam!!");
-//				cambox.translate((int) -d, 0);
-//				return false;
-//			}
-//		}
+
+		for (Player p : players) {
+			int[] c = p.getScreenCoords();
+			if (c[0] < cambox.getX() || c[0] > cambox.getMaxX()) {
+				System.out.println("Can't pan cam!!");
+				cambox.translate((int) -d, 0);
+				return false;
+			}
+		}
 
 		return true;
 	}
 
+	@Deprecated
 	/**
 	 * Pans the camera, but only does checking on the Y axis. Better for how we're doing seperate-axis integration
 	 * 
@@ -224,9 +248,18 @@ public class Game extends JFrame {
 		if (s < cambox.getY())
 			d = s - cambox.getY();
 		else if (s > cambox.getMaxY())
-			d = s - cambox.getMaxY();
+			d = s - cambox.getMaxY() + 1;
 
 		cambox.y += d;
+
+		for (Player p : players) {
+			int[] c = p.getScreenCoords();
+			if (c[1] < cambox.getY() || c[1] > cambox.getMaxY()) {
+				System.out.println("Can't pan cam!!");
+				cambox.translate(0, (int) -d);
+				return false;
+			}
+		}
 
 		return true;
 	}

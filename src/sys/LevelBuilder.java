@@ -132,7 +132,7 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 		camera = new Point(0, Tile.getScreenCoords(size, size)[0] / 2);
 		
 		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
-		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles.length)[1]+Tile.TILE_HEIGHT;
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1]+Tile.TILE_HEIGHT;
 		buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		
 		repaint();
@@ -153,7 +153,7 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 		System.out.println("Read from file successfully!");
 		
 		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
-		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles.length)[1]+Tile.TILE_HEIGHT;
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1]+Tile.TILE_HEIGHT;
 		buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		repaint();
 	}
@@ -179,7 +179,7 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 		super.paintComponent(g);
 		
 		Graphics2D g2d = buffer.createGraphics();
-		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		g2d.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
 		g2d.translate(0, buffer.getHeight()/2);
 		for (int i = 0; i < tiles.length; i++)
 			for (int j = tiles[i].length - 1; j >= 0; j--)

@@ -12,6 +12,7 @@ public abstract class Player extends Entity {
 	protected double speed;
 	
 	private InputMethod input;
+	private boolean hold = false;
 
 	public Player(double x, double y, Animation a, InputMethod input) {
 		super(x, y, a);
@@ -23,23 +24,47 @@ public abstract class Player extends Entity {
 		double[] a = input.stickL();
 		
 		impulse(speed*(a[1]+a[0]), speed*(a[1]-a[0]));
+		
+		if(input.attack() && !hold) {
+			System.out.println("THWACK");
+			hold = true;
+		}
+	
+		if(input.special() && !hold) {
+			System.out.println("HUZZAH!");
+			hold = true;
+		}
+		
+		if(!input.attack() && !input.special())
+			hold = false;
 	}
 	
 	@Override
 	public void update(Level l) {
-;		xCoord += xVel;
-		if (!l.isInBounds(xCoord, yCoord) || !Game.panX(xCoord, yCoord)) {
+		if(xVel > 0.01)
+			facingLeft = false;
+		else if(xVel < -0.01)
+			facingLeft = true;
+		
+		xCoord += xVel;
+		if (!l.isInBounds(xCoord, yCoord)) {
 			xCoord -= xVel;
 			xVel = 0;
-		} else
-			xVel *= FRICTION;
+		}
 
 		yCoord += yVel;
-		if (!l.isInBounds(xCoord, yCoord) || !Game.panY(xCoord, yCoord)) {
+		if (!l.isInBounds(xCoord, yCoord)) {
 			yCoord -= yVel;
 			yVel = 0;
-		} else
-			yVel *= FRICTION;
+		}
+		
+		if(!Game.trackCam(this)) {
+			xCoord -= xVel;
+			yCoord -= yVel;
+		}
+		
+		xVel *= FRICTION;
+		yVel *= FRICTION;
 	}
 
 	public static class DebugPlayer extends Player {
@@ -52,6 +77,20 @@ public abstract class Player extends Entity {
 		public void draw(Graphics2D g) {
 			super.draw(g);
 		}
+	}
+	
+	public static class DummyPlayer extends DebugPlayer {
 
+		public DummyPlayer(double x, double y) {
+			super(x, y, null);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public void handleInput() {
+			//Wooo spooky!
+		}
+
+		
 	}
 }

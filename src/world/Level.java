@@ -10,6 +10,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import ent.Entity;
 
@@ -41,10 +42,12 @@ public class Level {
 	public void draw(Graphics2D g) {
 		g.drawImage(background, 0, -bgOffset, null);
 
+		Collections.sort(entities);
 		for (Entity e : entities) {
 			e.draw(g);
 		}
 		
+		/* Uncomment to enable GOTTA GO SLOW mode */
 //		for (int i = 0; i < tiles.length; i++) {
 //			for (int j = tiles[i].length - 1; j >= 0; j--) {
 //				Tile.draw(tiles[i][j], g, i, j);
@@ -75,8 +78,10 @@ public class Level {
 	 * Render the background image
 	 */
 	public void buildBackground() {
-		bgOffset = Tile.getScreenCoords(tiles.length, tiles.length)[0] / 2;
-		background = new BufferedImage(2 * bgOffset, 2 * bgOffset, BufferedImage.TYPE_INT_ARGB);
+		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1]+Tile.TILE_HEIGHT;
+		bgOffset = height / 2;
+		background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = background.createGraphics();
 		g.translate(0, bgOffset);
 		for (int i = 0; i < tiles.length; i++)
@@ -113,7 +118,7 @@ public class Level {
 
 	public static Level buildDebug() {
 		Level l = new Level();
-		l.loadLevel(new File("data/levels/debug-big.lvl"));
+		l.loadLevel(new File("data/levels/debug-huge.lvl"));
 		return l;
 	}
 

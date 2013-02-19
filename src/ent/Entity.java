@@ -7,7 +7,7 @@ import sys.Animation;
 import world.Level;
 import world.Tile;
 
-public abstract class Entity {
+public abstract class Entity implements Comparable<Entity> {
 	public static final double FRICTION = 0.6; // lower = stickier
 	private Animation anim;
 	protected double xCoord, yCoord, xVel, yVel;
@@ -27,6 +27,11 @@ public abstract class Entity {
 	 *            the Level the entity is acting in
 	 */
 	public void update(Level l) {
+		if(xVel > 0.01)
+			facingLeft = false;
+		else if(xVel < -0.01)
+			facingLeft = true;
+		
 		xCoord += xVel;
 		if (!l.isInBounds(xCoord, yCoord)) {
 			xCoord -= xVel;
@@ -95,6 +100,12 @@ public abstract class Entity {
 
 	public boolean checkPosition(int x, int y) {
 		return (xCoord > x && xCoord <= x + 1 && yCoord > y && yCoord <= yCoord + 1);
+	}
+	
+	@Override
+	public int compareTo(Entity arg0) {
+		int y = arg0.getScreenCoords()[1];
+		return (this.getScreenCoords()[1] - y);
 	}
 
 }
