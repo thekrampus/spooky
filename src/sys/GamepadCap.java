@@ -25,7 +25,7 @@ public class GamepadCap implements InputMethod {
 	}
 
 	@Override
-	public double[] sitckR() {
+	public double[] stickR() {
 		if(stickR[0]*stickR[0] + stickR[1]*stickR[1] > STICK_DEADZONE)
 			return stickR;
 		else
