@@ -88,7 +88,7 @@ public class KeyCap implements KeyListener, InputMethod{
 	}
 
 	@Override
-	public double[] stickL() {
+	public double[] stickR() {
 		double[] axes = {0., 0.};
 		if(key_w) {
 			if(key_a) {
@@ -118,7 +118,7 @@ public class KeyCap implements KeyListener, InputMethod{
 	}
 
 	@Override
-	public double[] stickR() {
+	public double[] stickL() {
 		double[] axes = {0., 0.};
 		if(key_up) {
 			if(key_left) {
