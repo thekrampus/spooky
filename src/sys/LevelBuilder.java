@@ -18,7 +18,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
@@ -45,7 +44,7 @@ public class LevelBuilder extends JFrame {
 	public static void main(String[] args) {
 		try {
 		AssetLib.load();
-		} catch(IOException e) {
+		} catch(Exception e) {
 			System.out.println("Couldn't load game assets!");
 			e.printStackTrace();
 			System.exit(0);

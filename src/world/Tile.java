@@ -4,11 +4,10 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 
 import sys.AssetLib;
 
-public enum Tile implements Serializable {
+public enum Tile {
 	EMPTY, FLOOR, WALL;
 
 	public static final int TILE_WIDTH = 160, TILE_HEIGHT = 80; // default size of tiles

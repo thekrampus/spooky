@@ -7,9 +7,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import javax.swing.JFrame;
 
+import menu.MenuFrame;
+import menu.StartMenu;
 import net.java.games.input.Controller;
 import net.java.games.input.Controller.Type;
 import net.java.games.input.ControllerEnvironment;
@@ -25,16 +28,19 @@ public class Game extends JFrame {
 	private BufferStrategy buffer;
 	private KeyCap keys;
 	private boolean running = true; // Set this to false when you decide the game is over!
+	private static boolean paused = false; // Game logic will only run when this is false - drawing will still occur, though!
 
 	private Level level;
-	// private static Player[] players;
 	private static ArrayList<Player> players;
+	protected static Stack<MenuFrame> menuStack;
 
 	private static Rectangle cambox;
 	private static final int CAM_BUFFER = 100; // How close a player needs to be to the edge of the screen to start panning
+	
+	public static int centerX, centerY;
 
 	public Game() {
-		super("SPOOKY DUNGEON REVENGE v3");
+		super("PAY NO ATTENTION TO THE MAN BEHIND THE CURTAIN");
 
 		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
@@ -76,6 +82,13 @@ public class Game extends JFrame {
 
 		for (Player p : players)
 			level.addEntity(p);
+		
+		//initialise start menu
+		ArrayList<InputMethod> allInputs = new ArrayList<InputMethod>();
+		allInputs.add(keys);
+		allInputs.addAll(gamepads);
+		menuStack = new Stack<MenuFrame>();
+		menuStack.push(new StartMenu(allInputs));
 
 		cambox.setLocation(4000, -200);
 	}
@@ -133,12 +146,18 @@ public class Game extends JFrame {
 		g2d.drawString("FPS: " + (1000 / mspf), 20, 20);
 
 		// draw things
-		// g2d.drawString("SPOOKY DUNGEON - pre-alpha available to paying customers only!!", 100, 200);
 		g2d.translate(-(cambox.getX() - CAM_BUFFER), -(cambox.getY() - CAM_BUFFER));
 
 		g2d.drawRect((int) cambox.getX(), (int) cambox.getY(), cambox.width, cambox.height);
-		// g2d.translate(200, 300);
 		level.draw(g2d);
+		
+		//g2d.dispose();
+		//g2d = (Graphics2D) buffer.getDrawGraphics();
+		g2d.translate((cambox.getX() - CAM_BUFFER), (cambox.getY() - CAM_BUFFER));
+		//draw all the menus!
+		for (MenuFrame menu : menuStack) {
+			menu.draw(g2d);
+		}
 
 		g2d.dispose();
 
@@ -151,15 +170,23 @@ public class Game extends JFrame {
 	 * Throw players at game
 	 */
 	private void logic() {
-		level.update();
+		if(!paused)
+			level.update();
 	}
 
 	/**
 	 * Throw input polling at players
 	 */
 	private void input() {
-		for (Player p : players)
-			p.handleInput();
+		if(menuStack.isEmpty())
+			for (Player p : players)
+				p.handleInput();
+		else if(!paused) {
+			if(!menuStack.peek().isAlive())
+				menuStack.pop();
+			else
+				menuStack.peek().control();
+		}
 	}
 
 	/**
@@ -268,5 +295,16 @@ public class Game extends JFrame {
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
 		cambox.setSize(width - 2 * CAM_BUFFER, height - 2 * CAM_BUFFER);
+		centerX = width/2;
+		centerY = height/2;
 	}
+	
+	public static void setPaused(boolean state) {
+		paused = state;
+	}
+	
+	public static void pushMenu(MenuFrame menu) {
+		menuStack.push(menu);
+	}
+	
 }

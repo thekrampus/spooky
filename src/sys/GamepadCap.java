@@ -65,9 +65,9 @@ public class GamepadCap implements InputMethod {
 						} else if(event.getComponent().getIdentifier().equals(Identifier.Button._8)) {
 							button_start = (event.getValue()!=0);
 						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.X)) {
-							stickL[1] = event.getValue();
-						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.Y)) {
 							stickL[0] = event.getValue();
+						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.Y)) {
+							stickL[1] = event.getValue();
 						}
 						
 					}

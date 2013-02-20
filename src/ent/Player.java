@@ -2,6 +2,7 @@ package ent;
 
 import java.awt.Graphics2D;
 
+import menu.PauseMenu;
 import sys.Animation;
 import sys.AssetLib;
 import sys.Game;
@@ -23,7 +24,7 @@ public abstract class Player extends Entity {
 	public void handleInput() {
 		double[] a = input.stickL();
 		
-		impulse(speed*(a[1]+a[0]), speed*(a[1]-a[0]));
+		impulse(speed*(a[0]+a[1]), speed*(a[0]-a[1]));
 		
 		if(input.attack() && !hold) {
 			System.out.println("THWACK");
@@ -37,6 +38,12 @@ public abstract class Player extends Entity {
 		
 		if(!input.attack() && !input.special())
 			hold = false;
+		
+		if(input.menu()) {
+			//int[] sc = this.getScreenCoords();
+			//Game.pushMenu(new PauseMenu(new Point(sc[0], sc[1]), input));
+			Game.pushMenu(new PauseMenu(input));
+		}
 	}
 	
 	@Override

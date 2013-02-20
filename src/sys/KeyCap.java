@@ -92,26 +92,26 @@ public class KeyCap implements KeyListener, InputMethod{
 		double[] axes = {0., 0.};
 		if(key_w) {
 			if(key_a) {
-				axes[0] = -.707;
 				axes[1] = -.707;
-			} else if(key_d) {
 				axes[0] = -.707;
-				axes[1] = .707;
+			} else if(key_d) {
+				axes[1] = -.707;
+				axes[0] = .707;
 			} else {
-				axes[0] = -1;
+				axes[1] = -1;
 			}
 		} else if(key_s) {
 			if(key_a) {
-				axes[0] = .707;
-				axes[1] = -.707;
-			} else if(key_d) {
-				axes[0] = .707;
 				axes[1] = .707;
+				axes[0] = -.707;
+			} else if(key_d) {
+				axes[1] = .707;
+				axes[0] = .707;
 			} else {
-				axes[0] = 1;
+				axes[1] = 1;
 			}
 		} else {
-			axes[1] = (key_a? -1 : 0) + (key_d? 1 : 0);
+			axes[0] = (key_a? -1 : 0) + (key_d? 1 : 0);
 		}
 		
 		return axes;
@@ -122,26 +122,26 @@ public class KeyCap implements KeyListener, InputMethod{
 		double[] axes = {0., 0.};
 		if(key_up) {
 			if(key_left) {
-				axes[0] = -.707;
 				axes[1] = -.707;
-			} else if(key_right) {
 				axes[0] = -.707;
-				axes[1] = .707;
+			} else if(key_right) {
+				axes[1] = -.707;
+				axes[0] = .707;
 			} else {
-				axes[0] = -1;
+				axes[1] = -1;
 			}
 		} else if(key_down) {
 			if(key_left) {
-				axes[0] = .707;
-				axes[1] = -.707;
-			} else if(key_right) {
-				axes[0] = .707;
 				axes[1] = .707;
+				axes[0] = -.707;
+			} else if(key_right) {
+				axes[1] = .707;
+				axes[0] = .707;
 			} else {
-				axes[0] = 1;
+				axes[1] = 1;
 			}
 		} else {
-			axes[1] = (key_left? -1 : 0) + (key_right? 1 : 0);
+			axes[0] = (key_left? -1 : 0) + (key_right? 1 : 0);
 		}
 		
 		return axes;
