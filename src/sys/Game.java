@@ -40,7 +40,7 @@ public class Game extends JFrame {
 	public static int centerX, centerY;
 
 	public Game() {
-		super("PAY NO ATTENTION TO THE MAN BEHIND THE CURTAIN");
+		super("WHERE'S MY SUPERSUIT?!");
 
 		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
@@ -76,7 +76,7 @@ public class Game extends JFrame {
 
 		players = new ArrayList<Player>();
 		players.add(new Player.DebugPlayer(11, 11, keys));
-		players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
+		//players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
 		players.add(new Player.DummyPlayer(8, 8));
 		players.add(new Player.DummyPlayer(11, 8));
 
@@ -99,7 +99,7 @@ public class Game extends JFrame {
 		
 		for(Controller c : controllers) {
 			System.out.println(c.getType());
-			if(c.getType() == Type.GAMEPAD)
+			if(c.getType() == Controller.Type.GAMEPAD)
 				gp.add(new GamepadCap(c));
 		}
 		
