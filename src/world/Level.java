@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -25,11 +26,23 @@ public class Level {
 
 	public Level() {
 		entities = new ArrayList<Entity>();
+		try {
+			tileset = new Tileset("stone");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong loading the tileset! Yell at Spencer.");
+		}
 	}
 
 	public Level(int size) {
 		tiles = new Tile[size][size];
 		entities = new ArrayList<Entity>();
+		try {
+			tileset = new Tileset("stone");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong loading the tileset! Yell at Spencer.");
+		}
 
 		for (int i = 0; i < size; i++)
 			Arrays.fill(tiles[i], Tile.EMPTY);
@@ -126,6 +139,14 @@ public class Level {
 
 	public static Level buildDebug() {
 		Level l = new Level();
+		
+		try {
+			l.tileset = new Tileset("stone");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Something went wrong loading the tileset. Tell the devs this very important error message: EC-Rarity-24601");
+		}
+		
 		l.loadLevel(new File("data/levels/debug-huge.lvl"));
 		return l;
 	}
@@ -148,6 +169,10 @@ public class Level {
 			e.printStackTrace();
 			return false;
 		}
+		
+		System.out.println("Do something about tilesets");
+		// may have to put something about tilesets here
+		
 		System.out.println("Read from file successfully!");
 		return true;
 	}

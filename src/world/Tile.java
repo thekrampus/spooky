@@ -41,6 +41,9 @@ public enum Tile implements Serializable {
 		case EMPTY:
 			return; // I'm invisible!!
 		case FLOOR:
+			System.out.println(Launcher.game);
+			System.out.println(Launcher.game.getLevel());
+			System.out.println(Launcher.game.getLevel().getTileset());
 			sprite = Launcher.game.getLevel().getTileset().floor.getSubimage(0, TILE_HEIGHT * (int) (Math.random()*3), TILE_WIDTH, TILE_HEIGHT);
 			break;
 		case WALL:

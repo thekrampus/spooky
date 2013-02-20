@@ -52,7 +52,7 @@ public class Game extends JFrame {
 		this.addKeyListener(keys);
 		this.requestFocus();
 		
-		ArrayList<GamepadCap> gamepads = initControllers();
+		//ArrayList<GamepadCap> gamepads = initControllers();
 
 		// initialize frame-lock
 		timer = System.currentTimeMillis();
@@ -70,7 +70,7 @@ public class Game extends JFrame {
 
 		players = new ArrayList<Player>();
 		players.add(new Player.DebugPlayer(11, 11, keys));
-		players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
+		//players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
 		players.add(new Player.DummyPlayer(8, 8));
 		players.add(new Player.DummyPlayer(11, 8));
 
@@ -86,7 +86,7 @@ public class Game extends JFrame {
 		
 		for(Controller c : controllers) {
 			System.out.println(c.getType());
-			if(c.getType() == Type.GAMEPAD)
+			if(c.getType() == Controller.Type.GAMEPAD)
 				gp.add(new GamepadCap(c));
 		}
 		
