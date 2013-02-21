@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import menu.MenuFrame;
 import menu.StartMenu;
 import net.java.games.input.Controller;
-import net.java.games.input.Controller.Type;
 import net.java.games.input.ControllerEnvironment;
 import world.Level;
 import world.Tile;
@@ -140,7 +139,7 @@ public class Game extends JFrame {
 
 		for (Controller c : controllers) {
 			System.out.println(c.getType());
-			if (c.getType() == Type.GAMEPAD || c.getType() == Type.STICK)
+			if (c.getType() == Controller.Type.GAMEPAD || c.getType() == Controller.Type.STICK)
 				gp.add(new GamepadCap(c));
 		}
 
