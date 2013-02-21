@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import ent.Player;
+
 import sys.AssetLib;
 import sys.Game;
 import sys.InputMethod;
@@ -14,8 +16,9 @@ public class StartMenu extends MenuFrame {
 
 	private Menu menu;
 	private ArrayList<InputMethod> allInputs;
+	private CharacterMenu characterSelect;
 
-	public StartMenu(ArrayList<InputMethod> allInputs) {
+	public StartMenu(final ArrayList<InputMethod> allInputs) {
 		super(Game.centerX - WIDTH / 2, Game.centerY - HEIGHT / 2, WIDTH, HEIGHT);
 
 		this.allInputs = allInputs;
@@ -25,14 +28,15 @@ public class StartMenu extends MenuFrame {
 		menu.addItem(new MenuItem("new game") {
 			public void activate() {
 				// uhhhhhhhhhhhh
-				alive = false;
+				//alive = false;
+				characterSelect = new CharacterMenu(allInputs);
+				Game.pushMenu(characterSelect);
 			}
 		});
 
 		menu.addItem(new MenuItem("options") {
 			public void activate() {
 				System.out.println("Aint no mothafuckin options!");
-				alive = false;
 			}
 		});
 
@@ -85,6 +89,10 @@ public class StartMenu extends MenuFrame {
 		g.drawString("v" + Launcher.VERSION_NUM, frame.x+3, frame.y + (int)frame.getHeight() - 1 - 24);
 		g.drawString("Made for Tech Game Jam 1", frame.x+3, frame.y + (int)frame.getHeight() - 1 - 6);
 		menu.draw(g, (int) frame.getCenterX(), frame.y + 180);
+	}
+	
+	public ArrayList<Player> getPlayerList() {
+		return characterSelect.getPlayerList();
 	}
 
 }

@@ -27,7 +27,7 @@ public class Game extends JFrame {
 	private long timer, mspf;
 	private BufferStrategy buffer;
 	private KeyCap keys;
-	private boolean running = true; // Set this to false when you decide the game is over!
+	private static boolean running; // Set this to false when you decide the game is over!
 	private static boolean paused = false; // Game logic will only run when this is false - drawing will still occur, though!
 
 	private Level level;
@@ -36,7 +36,7 @@ public class Game extends JFrame {
 
 	private static Rectangle cambox;
 	private static final int CAM_BUFFER = 100; // How close a player needs to be to the edge of the screen to start panning
-	
+
 	public static int centerX, centerY;
 
 	public Game() {
@@ -57,8 +57,50 @@ public class Game extends JFrame {
 		this.setFocusable(true);
 		this.addKeyListener(keys);
 		this.requestFocus();
-		
+
+		// initialize frame-lock
+		timer = System.currentTimeMillis();
+		mspf = 1;
+		this.setVisible(true);
+
+		// initialize frame buffer
+		this.createBufferStrategy(2);
+		buffer = this.getBufferStrategy();
+
+		// initialize menu background level
+		level = Level.loadLevel("data/levels/menuscene.lvl");
+
 		ArrayList<GamepadCap> gamepads = initControllers();
+		players = new ArrayList<Player>();
+		players.add(new Player.DummyPlayer(1, 1));
+		players.add(new Player.DummyPlayer(5, 5));
+
+		for (Player p : players)
+			level.addEntity(p);
+
+		// initialise start menu
+		ArrayList<InputMethod> allInputs = new ArrayList<InputMethod>();
+		allInputs.add(keys);
+		allInputs.addAll(gamepads);
+		menuStack = new Stack<MenuFrame>();
+		menuStack.push(new StartMenu(allInputs));
+
+		cambox.setLocation(50, -300);
+		running = true;
+	}
+
+	public Game(ArrayList<Player> playerList) {
+		super();
+
+		cambox = new Rectangle(0, 0, 0, 0);
+		this.setSize(1024, 768);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setUndecorated(true);
+
+		// put that shit in the middle of the goddamn screen
+		Point center = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+		center.translate(-this.getWidth() / 2, -this.getHeight() / 2);
+		this.setLocation(center);
 
 		// initialize frame-lock
 		timer = System.currentTimeMillis();
@@ -70,39 +112,40 @@ public class Game extends JFrame {
 		buffer = this.getBufferStrategy();
 
 		// initialize level
-		level = Level.buildDebug();
+		level = Level.loadLevel("data/levels/debug-big.lvl");
 		level.buildHitbox();
 		level.buildBackground();
 
-		players = new ArrayList<Player>();
-		players.add(new Player.DebugPlayer(11, 11, keys));
-		players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
-		players.add(new Player.DummyPlayer(8, 8));
-		players.add(new Player.DummyPlayer(11, 8));
-
-		for (Player p : players)
-			level.addEntity(p);
-		
-		//initialise start menu
+		// init level, inputs
+		this.setFocusable(true);
 		ArrayList<InputMethod> allInputs = new ArrayList<InputMethod>();
-		allInputs.add(keys);
-		allInputs.addAll(gamepads);
-		menuStack = new Stack<MenuFrame>();
-		menuStack.push(new StartMenu(allInputs));
+		players = playerList;
+		for (Player p : players) {
+			level.addEntity(p);
+			InputMethod in = p.getInput();
+			allInputs.add(in);
+			if (in instanceof KeyCap)
+				this.addKeyListener((KeyCap) in);
+		}
 
-		cambox.setLocation(4000, -200);
+		this.requestFocus();
+		
+		menuStack = new Stack<MenuFrame>();
+
+		cambox.setLocation(50, -300);
+		running = true;
 	}
-	
+
 	public static ArrayList<GamepadCap> initControllers() {
 		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		ArrayList<GamepadCap> gp = new ArrayList<GamepadCap>();
-		
-		for(Controller c : controllers) {
+
+		for (Controller c : controllers) {
 			System.out.println(c.getType());
-			if(c.getType() == Type.GAMEPAD)
+			if (c.getType() == Type.GAMEPAD || c.getType() == Type.STICK)
 				gp.add(new GamepadCap(c));
 		}
-		
+
 		return gp;
 	}
 
@@ -116,6 +159,9 @@ public class Game extends JFrame {
 			draw();
 			timing();
 		}
+		
+		this.setVisible(false);
+		this.dispose();
 	}
 
 	/**
@@ -147,14 +193,12 @@ public class Game extends JFrame {
 
 		// draw things
 		g2d.translate(-(cambox.getX() - CAM_BUFFER), -(cambox.getY() - CAM_BUFFER));
-
-		g2d.drawRect((int) cambox.getX(), (int) cambox.getY(), cambox.width, cambox.height);
 		level.draw(g2d);
-		
-		//g2d.dispose();
-		//g2d = (Graphics2D) buffer.getDrawGraphics();
+
+		// g2d.dispose();
+		// g2d = (Graphics2D) buffer.getDrawGraphics();
 		g2d.translate((cambox.getX() - CAM_BUFFER), (cambox.getY() - CAM_BUFFER));
-		//draw all the menus!
+		// draw all the menus!
 		for (MenuFrame menu : menuStack) {
 			menu.draw(g2d);
 		}
@@ -170,7 +214,7 @@ public class Game extends JFrame {
 	 * Throw players at game
 	 */
 	private void logic() {
-		if(!paused)
+		if (!paused)
 			level.update();
 	}
 
@@ -178,11 +222,11 @@ public class Game extends JFrame {
 	 * Throw input polling at players
 	 */
 	private void input() {
-		if(menuStack.isEmpty())
+		if (menuStack.isEmpty())
 			for (Player p : players)
 				p.handleInput();
-		else if(!paused) {
-			if(!menuStack.peek().isAlive())
+		else if (!paused) {
+			if (!menuStack.peek().isAlive())
 				menuStack.pop();
 			else
 				menuStack.peek().control();
@@ -295,16 +339,20 @@ public class Game extends JFrame {
 	public void setSize(int width, int height) {
 		super.setSize(width, height);
 		cambox.setSize(width - 2 * CAM_BUFFER, height - 2 * CAM_BUFFER);
-		centerX = width/2;
-		centerY = height/2;
+		centerX = width / 2;
+		centerY = height / 2;
 	}
-	
+
 	public static void setPaused(boolean state) {
 		paused = state;
 	}
-	
+
 	public static void pushMenu(MenuFrame menu) {
 		menuStack.push(menu);
 	}
 	
+	public static void stopAllInstances() {
+		running = false;
+	}
+
 }

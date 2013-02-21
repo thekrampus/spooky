@@ -14,6 +14,7 @@ public class PauseMenu extends MenuFrame {
 
 	public PauseMenu(final InputMethod input) {
 		super(Game.centerX - WIDTH/2, Game.centerY - HEIGHT / 2, WIDTH, HEIGHT);
+		Game.setPaused(true);
 
 		this.input = input;
 		
@@ -22,6 +23,7 @@ public class PauseMenu extends MenuFrame {
 		menu.addItem(new MenuItem("continue") {
 			public void activate() {
 				// nyehhhhhhhhhhhh
+				Game.setPaused(false);
 				alive = false;
 			}
 		});

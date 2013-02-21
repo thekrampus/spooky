@@ -46,24 +46,25 @@ public class Level {
 		for (Entity e : entities) {
 			e.draw(g);
 		}
-		
+
 		/* Uncomment to enable GOTTA GO SLOW mode */
-//		for (int i = 0; i < tiles.length; i++) {
-//			for (int j = tiles[i].length - 1; j >= 0; j--) {
-//				Tile.draw(tiles[i][j], g, i, j);
-//				
-//				for(Entity e : entities) {
-//					if(e.checkPosition(i, j))
-//						e.draw(g);
-//				}
-//			}
-//		}
+		// for (int i = 0; i < tiles.length; i++) {
+		// for (int j = tiles[i].length - 1; j >= 0; j--) {
+		// Tile.draw(tiles[i][j], g, i, j);
+		//
+		// for(Entity e : entities) {
+		// if(e.checkPosition(i, j))
+		// e.draw(g);
+		// }
+		// }
+		// }
 	}
 
 	public void setTile(int x, int y, Tile tile) {
 		tiles[x][y] = tile;
 	}
 
+	@Deprecated
 	/**
 	 * Build the hitbox for the current level by polling the hitboxen of all the tiles
 	 */
@@ -74,12 +75,13 @@ public class Level {
 				hitbox.add(Tile.getHitbox(tiles[i][j], i, j));
 	}
 
+	@Deprecated
 	/**
 	 * Render the background image
 	 */
 	public void buildBackground() {
 		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
-		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1]+Tile.TILE_HEIGHT;
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1] + 4*Tile.TILE_HEIGHT;
 		bgOffset = height / 2;
 		background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = background.createGraphics();
@@ -87,7 +89,26 @@ public class Level {
 		for (int i = 0; i < tiles.length; i++)
 			for (int j = tiles[i].length - 1; j >= 0; j--)
 				Tile.draw(tiles[i][j], g, i, j);
-
+	}
+	
+	public void buildLevelProps() {
+		hitbox = new Area();
+		
+		int width = Tile.getScreenCoords(tiles.length, tiles[0].length)[0];
+		int height = Tile.getScreenCoords(tiles.length, 0)[1] - Tile.getScreenCoords(0, tiles[0].length)[1] + 4*Tile.TILE_HEIGHT;
+		bgOffset = height / 2;
+		background = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = background.createGraphics();
+		g.translate(0, bgOffset);
+		for (int i = 0; i < tiles.length; i++) {
+			for (int j = tiles[i].length - 1; j >= 0; j--) {
+				Tile.draw(tiles[i][j], g, i, j);
+				hitbox.add(Tile.getHitbox(tiles[i][j], i, j));
+				Entity ent = Tile.pullEnt(tiles[i][j], i, j);
+				if(ent != null)
+					entities.add(ent);
+			}
+		}
 	}
 
 	/**
@@ -116,10 +137,32 @@ public class Level {
 		}
 	}
 
+	@Deprecated
 	public static Level buildDebug() {
 		Level l = new Level();
-		l.loadLevel(new File("data/levels/debug-huge.lvl"));
+		l.loadFile(new File("data/levels/debug-huge.lvl"));
 		return l;
+	}
+
+	/**
+	 * Try and load a Level from a file path
+	 * 
+	 * @param path
+	 *            Path of file to load
+	 * @return Level loaded from file
+	 */
+	public static Level loadLevel(String path) {
+		Level l = new Level();
+		if(l.loadFile(new File(path))) {
+//			l.buildHitbox();
+//			l.buildBackground();
+			l.buildLevelProps();
+			return l;
+		} else {
+			System.exit(0);
+			return null;
+		}
+			
 	}
 
 	/**
@@ -129,7 +172,7 @@ public class Level {
 	 *            File to load
 	 * @return true if file loaded successfully
 	 */
-	public boolean loadLevel(File f) {
+	public boolean loadFile(File f) {
 		try {
 			ObjectInput in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(f)));
 			tiles = (Tile[][]) in.readObject();

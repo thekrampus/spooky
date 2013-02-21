@@ -5,6 +5,9 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 
+import ent.Entity;
+import ent.WallEnt;
+
 import sys.AssetLib;
 
 public enum Tile {
@@ -69,6 +72,17 @@ public enum Tile {
 			return AssetLib.TILE_NULL;
 		}
 
+	}
+	
+	public static Entity pullEnt(Tile t, int x, int y) {
+		if(t == null)
+			return null;
+		switch(t) {
+		case WALL:
+			return new WallEnt(x, y);
+		default:
+			return null;
+		}
 	}
 
 	/**

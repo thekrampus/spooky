@@ -73,6 +73,10 @@ public abstract class Player extends Entity {
 		xVel *= FRICTION;
 		yVel *= FRICTION;
 	}
+	
+	public InputMethod getInput() {
+		return input;
+	}
 
 	public static class DebugPlayer extends Player {
 
