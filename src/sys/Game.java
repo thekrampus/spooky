@@ -76,7 +76,7 @@ public class Game extends JFrame {
 
 		players = new ArrayList<Player>();
 		players.add(new Player.DebugPlayer(11, 11, keys));
-		//players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
+		players.add(new Player.DebugPlayer(8, 11, gamepads.get(0)));
 		players.add(new Player.DummyPlayer(8, 8));
 		players.add(new Player.DummyPlayer(11, 8));
 
