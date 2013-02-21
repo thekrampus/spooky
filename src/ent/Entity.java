@@ -25,13 +25,8 @@ public abstract class Entity implements Comparable<Entity> {
 	 * 
 	 * @param l
 	 *            the Level the entity is acting in
-	 * @return false if the entity needs removal
 	 */
-	public boolean update(Level l) {
-		if(xVel > 0.01)
-			facingLeft = false;
-		else if(xVel < -0.01)
-			facingLeft = true;
+	public void update(Level l) {
 		
 		xCoord += xVel;
 		if (!l.isInBounds(xCoord, yCoord)) {
@@ -46,8 +41,6 @@ public abstract class Entity implements Comparable<Entity> {
 			yVel = 0;
 		} else
 			yVel *= FRICTION;
-		
-		return true;
 	}
 
 	/**
@@ -109,6 +102,10 @@ public abstract class Entity implements Comparable<Entity> {
 	public int compareTo(Entity arg0) {
 		int y = arg0.getScreenCoords()[1];
 		return (this.getScreenCoords()[1] - y);
+	}
+	
+	public boolean isAlive() {
+		return true;
 	}
 
 }

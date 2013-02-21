@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AssetLib {
-	public static BufferedImage SHEET_SKELLY, SHEET_PORTAL, SHEET_FLASH, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
+	public static BufferedImage SHEET_SKELLY, SHEET_PORTAL, SHEET_FLASH, SHEET_BAT, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
 
 	public static Font FONT_LARGE, FONT_SMALL;
 
@@ -25,6 +25,7 @@ public class AssetLib {
 		SHEET_SKELLY = loadImage("data/skeleton-optimized.png");
 		SHEET_PORTAL = loadImage("data/pentagram-anim.png");
 		SHEET_FLASH = loadImage("data/spawnimation.png");
+		SHEET_BAT = loadImage("data/bat1-draft.png");
 		TILE_DEFAULT_FLOOR = loadImage("data/tile-stone.png");
 		TILE_DEFAULT_WALL = loadImage("data/stonewall-3.png");
 		TILE_NULL = loadImage("data/tile-null.png");

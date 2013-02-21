@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 import sys.AssetLib;
 import ent.Entity;
-import ent.Portal;
 import ent.WallEnt;
+import ent.enemy.Portal;
 
 public enum Tile {
 	EMPTY, FLOOR, WALL, PORTAL;

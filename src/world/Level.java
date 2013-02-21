@@ -133,7 +133,8 @@ public class Level {
 	 */
 	public void update() {
 		for (int i = 0; i < entities.size(); i++) {
-			if(!entities.get(i).update(this)) {
+			entities.get(i).update(this);
+			if(!entities.get(i).isAlive()) {
 				entities.remove(i);
 				i--;
 			}

@@ -17,12 +17,8 @@ public class Flash extends Entity{
 	}
 	
 	@Override
-	public boolean update(Level l) {
-		if(timer > 0) {
-			timer--;
-			return true;
-		} else
-			return false;
+	public void update(Level l) {
+		timer--;
 	}
 	
 	@Override
@@ -31,6 +27,11 @@ public class Flash extends Entity{
 		BufferedImage frame = anim.getNextFrame();
 
 		g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - frame.getHeight() + frame.getHeight() - 50, null);
+	}
+	
+	@Override
+	public boolean isAlive() {
+		return timer > 0;
 	}
 
 }

@@ -48,7 +48,7 @@ public abstract class Player extends Entity {
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		if(xVel > 0.01)
 			facingLeft = false;
 		else if(xVel < -0.01)
@@ -73,12 +73,15 @@ public abstract class Player extends Entity {
 		
 		xVel *= FRICTION;
 		yVel *= FRICTION;
-		
-		return health > 0;
 	}
 	
 	public InputMethod getInput() {
 		return input;
+	}
+	
+	@Override
+	public boolean isAlive() {
+		return health > 0;
 	}
 
 	public static class DebugPlayer extends Player {
