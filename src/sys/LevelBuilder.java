@@ -219,7 +219,7 @@ class DisplayPanel extends JPanel implements MouseMotionListener, MouseListener 
 		pX = pY = 0;
 
 		if(e.getButton() == 3) {
-			double[] iso = Tile.getIsoCoords(1.5*(e.getX()-camera.x), e.getY()-camera.y);
+			double[] iso = Tile.getIsoCoords(1.75*(e.getX()-camera.x), e.getY()-camera.y);
 			System.out.println(Math.round(iso[0]) + ", " + Math.round(iso[1]));
 			
 			int iX = (int)Math.round(iso[0]);
@@ -253,7 +253,7 @@ class TileMenu extends JFrame {
 		for(final Tile tile : Tile.values()) {
 			JButton button = new JButton(new ImageIcon(Tile.getSprite(tile)));
 			button.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) { selection = tile; }
+				public void actionPerformed(ActionEvent e) { selection = tile;}
 			});
 			this.add(button);
 		}
@@ -266,6 +266,4 @@ class TileMenu extends JFrame {
 	public Tile getSelection() {
 		return selection;
 	}
-	
-	
 }

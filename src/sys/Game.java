@@ -34,7 +34,7 @@ public class Game extends JFrame {
 	protected static Stack<MenuFrame> menuStack;
 
 	private static Rectangle cambox;
-	private static final int CAM_BUFFER = 100; // How close a player needs to be to the edge of the screen to start panning
+	private static final int CAM_BUFFER = 150; // How close a player needs to be to the edge of the screen to start panning
 
 	public static int centerX, centerY;
 
@@ -89,7 +89,7 @@ public class Game extends JFrame {
 	}
 
 	public Game(ArrayList<Player> playerList) {
-		super();
+		super("I uttered a scream at the figure in white with a silver GameBoy in his palm, and like a sharp, sudden jolt of four-bit lightening, he brought light into this world");
 
 		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
@@ -182,7 +182,9 @@ public class Game extends JFrame {
 	 */
 	private void draw() {
 		Graphics2D g2d = (Graphics2D) buffer.getDrawGraphics(); // Graphics object to draw with
-		g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+		//g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+		g2d.setColor(Color.black);
+		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 		// draw fps counter
 		g2d.setColor(Color.blue);

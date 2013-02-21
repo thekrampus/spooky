@@ -10,29 +10,30 @@ import world.Level;
 import world.Tile;
 import ent.Flash;
 
-public class Portal extends Enemy {
-	public static final int MAX_ENEMIES = 40, SPAWN_DELAY = 100;
-	private int timer = SPAWN_DELAY;
+public abstract class Portal extends Enemy {
+	private int timer, spawnDelay, maxChildren;
 	private ArrayList<Enemy> children;
 
-	public Portal(double x, double y) {
+	public Portal(double x, double y, int spawnRate, int maxChildren) {
 		super(x+.5, y+.5, 0, 25, 0, new Animation(AssetLib.SHEET_PORTAL, 0, 6, 120, 59, 12));
 		children = new ArrayList<Enemy>();
+		this.timer = this.spawnDelay = spawnRate;
+		this.maxChildren = maxChildren;
 	}
 	
 	@Override
 	public void update(Level l) {
 		if(timer <= 0) {
-			if(children.size() < MAX_ENEMIES) {
+			if(children.size() < maxChildren) {
 				System.out.println("Spawning!");
 				double x = xCoord + (Math.random()-.5)/2.0;
 				double y = yCoord + (Math.random()-.5)/2.0;
 				l.addEntity(new Flash(x, y));
-				Bat b = new Bat(x, y);
-				l.addEntity(b);
-				children.add(b);
+				Enemy enemy = createEnemy();
+				l.addEntity(enemy);
+				children.add(enemy);
 			}
-			timer = SPAWN_DELAY;
+			timer = spawnDelay;
 		} else
 			timer--;
 		
@@ -57,6 +58,5 @@ public class Portal extends Enemy {
 		return health > 0;
 	}
 	
-	
-
+	protected abstract Enemy createEnemy();
 }

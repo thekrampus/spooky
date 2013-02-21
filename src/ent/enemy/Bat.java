@@ -11,7 +11,8 @@ import world.Tile;
 public class Bat extends Enemy {
 
 	public Bat(double x, double y) {
-		super(x, y, .1, 10, 5, new Animation(AssetLib.SHEET_BAT, 0, 2, 180, 340, 4));
+		// super(x, y, .1, 10, 5, new Animation(AssetLib.SHEET_BAT, 0, 2, 180, 340, 4));
+		super(x, y, .1, 10, 5, new Animation(AssetLib.SHEET_BAT, 0, 2, 58, 110, 4));
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -34,10 +35,23 @@ public class Bat extends Enemy {
 		BufferedImage frame = anim.getNextFrame();
 
 		if (!facingLeft)
-			g.drawImage(frame, c[0] - Tile.TILE_WIDTH / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, null);
+			g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - frame.getHeight(), null);
 		else
-			g.drawImage(frame, c[0] + Tile.TILE_WIDTH / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, -frame.getWidth(),
+			g.drawImage(frame, c[0] + frame.getWidth() / 2, c[1] - frame.getHeight(), -frame.getWidth(),
 					frame.getHeight(), null);
+	}
+	
+	public static class BatPortal extends Portal {
+
+		public BatPortal(double x, double y) {
+			super(x, y, 150, 15);
+		}
+
+		@Override
+		protected Enemy createEnemy() {
+			return new Bat(xCoord, yCoord);
+		}
+		
 	}
 
 }
