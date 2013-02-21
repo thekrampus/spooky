@@ -51,7 +51,7 @@ public enum Tile {
 			height = 240;
 			break;
 		case PORTAL:
-			sprite = AssetLib.TILE_PORTAL.getSubimage(0, 59, TILE_WIDTH, TILE_HEIGHT);
+			sprite = AssetLib.SHEET_PORTAL.getSubimage(0, 59, TILE_WIDTH, TILE_HEIGHT);
 			break;
 		default:
 			System.out.println("Not sure what to draw with this kind of tile!");
@@ -72,7 +72,7 @@ public enum Tile {
 		case WALL:
 			return AssetLib.TILE_DEFAULT_WALL;
 		case PORTAL:
-			return AssetLib.TILE_PORTAL.getSubimage(0, 0, 120, 59);
+			return AssetLib.SHEET_PORTAL.getSubimage(0, 0, 120, 59);
 		default:
 			System.out.println("Not sure what sprite this is!");
 			return AssetLib.TILE_NULL;

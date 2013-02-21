@@ -13,7 +13,7 @@ public class Portal extends Entity {
 	private int health = MAX_HEALTH, timer = SPAWN_DELAY;
 
 	public Portal(double x, double y) {
-		super(x+.5, y+.5, new Animation(AssetLib.TILE_PORTAL, 0, 6, 120, 59, 12));
+		super(x+.5, y+.5, new Animation(AssetLib.SHEET_PORTAL, 0, 6, 120, 59, 12));
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -21,6 +21,7 @@ public class Portal extends Entity {
 	public boolean update(Level l) {
 		if(timer <= 0) {
 			System.out.println("Spawning!");
+			l.addEntity(new Flash(xCoord + (Math.random()-.5)/2.0, yCoord + (Math.random()-.5)/2.0));
 			timer = SPAWN_DELAY;
 		} else
 			timer--;
@@ -28,6 +29,7 @@ public class Portal extends Entity {
 		return health > 0;
 	}
 	
+	@Override
 	public void draw(Graphics2D g) {
 		int[] c = Tile.getScreenCoords(xCoord, yCoord);
 		BufferedImage frame = anim.getNextFrame();
