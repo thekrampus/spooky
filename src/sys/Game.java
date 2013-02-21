@@ -40,7 +40,7 @@ public class Game extends JFrame {
 	public static int centerX, centerY;
 
 	public Game() {
-		super("PAY NO ATTENTION TO THE MAN BEHIND THE CURTAIN");
+		super("WHERE'S MY SUPERSUIT?!");
 
 		cambox = new Rectangle(0, 0, 0, 0);
 		this.setSize(1024, 768);
@@ -143,6 +143,7 @@ public class Game extends JFrame {
 		for (Controller c : controllers) {
 			System.out.println(c.getType());
 			if (c.getType() == Type.GAMEPAD || c.getType() == Type.STICK)
+			if(c.getType() == Controller.Type.GAMEPAD)
 				gp.add(new GamepadCap(c));
 		}
 
