@@ -5,13 +5,13 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 
+import sys.AssetLib;
 import ent.Entity;
+import ent.Portal;
 import ent.WallEnt;
 
-import sys.AssetLib;
-
 public enum Tile {
-	EMPTY, FLOOR, WALL;
+	EMPTY, FLOOR, WALL, PORTAL;
 
 	public static final int TILE_WIDTH = 160, TILE_HEIGHT = 80; // default size of tiles
 
@@ -24,6 +24,7 @@ public enum Tile {
 		case WALL:
 			return new Area();
 		case FLOOR:
+		case PORTAL:
 			return new Area(new Rectangle(x, y, 1, 1));
 		default:
 			System.out.println("Not sure what to do with this kind of tile!");
@@ -49,6 +50,9 @@ public enum Tile {
 			sprite = AssetLib.TILE_DEFAULT_WALL;
 			height = 240;
 			break;
+		case PORTAL:
+			sprite = AssetLib.TILE_PORTAL.getSubimage(0, 59, TILE_WIDTH, TILE_HEIGHT);
+			break;
 		default:
 			System.out.println("Not sure what to draw with this kind of tile!");
 			return;
@@ -67,6 +71,8 @@ public enum Tile {
 			return AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		case WALL:
 			return AssetLib.TILE_DEFAULT_WALL;
+		case PORTAL:
+			return AssetLib.TILE_PORTAL.getSubimage(0, 0, 120, 59);
 		default:
 			System.out.println("Not sure what sprite this is!");
 			return AssetLib.TILE_NULL;
@@ -80,6 +86,8 @@ public enum Tile {
 		switch(t) {
 		case WALL:
 			return new WallEnt(x, y);
+		case PORTAL:
+			return new Portal(x, y);
 		default:
 			return null;
 		}

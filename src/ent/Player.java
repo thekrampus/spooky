@@ -13,12 +13,13 @@ public abstract class Player extends Entity {
 	protected double speed;
 	
 	private InputMethod input;
-	private boolean hold = false;
+	private boolean hold = true;
+	private int health;
 
-	public Player(double x, double y, Animation a, InputMethod input) {
+	public Player(double x, double y, int health, Animation a, InputMethod input) {
 		super(x, y, a);
 		this.input = input;
-		// There will be more here but I'm not sure what it is!!
+		this.health = health;
 	}
 
 	public void handleInput() {
@@ -47,7 +48,7 @@ public abstract class Player extends Entity {
 	}
 	
 	@Override
-	public void update(Level l) {
+	public boolean update(Level l) {
 		if(xVel > 0.01)
 			facingLeft = false;
 		else if(xVel < -0.01)
@@ -72,6 +73,8 @@ public abstract class Player extends Entity {
 		
 		xVel *= FRICTION;
 		yVel *= FRICTION;
+		
+		return health > 0;
 	}
 	
 	public InputMethod getInput() {
@@ -81,7 +84,7 @@ public abstract class Player extends Entity {
 	public static class DebugPlayer extends Player {
 
 		public DebugPlayer(double x, double y, InputMethod input) {
-			super(x, y, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10), input);
+			super(x, y, 100, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10), input);
 			speed = 0.02;
 		}
 

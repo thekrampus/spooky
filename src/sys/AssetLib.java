@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AssetLib {
-	public static BufferedImage SHEET_SKELLY, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
+	public static BufferedImage SHEET_SKELLY, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL, TILE_PORTAL;
 
 	public static Font FONT_LARGE, FONT_SMALL;
 
@@ -26,6 +26,7 @@ public class AssetLib {
 		TILE_DEFAULT_FLOOR = loadImage("data/tile-stone.png");
 		TILE_DEFAULT_WALL = loadImage("data/stonewall-3.png");
 		TILE_NULL = loadImage("data/tile-null.png");
+		TILE_PORTAL = loadImage("data/pentagram-anim.png");
 
 		//Font f = Font.createFont(Font.TRUETYPE_FONT, new File("data/Fipps-Regular.otf"));
 		Font f = Font.createFont(Font.TRUETYPE_FONT, new File("data/HeinzHeinrich-Regular.otf"));

@@ -10,5 +10,5 @@ public class WallEnt extends Entity{
 	}
 	
 	@Override
-	public void update(Level l) {}
+	public boolean update(Level l) { return true; }
 }

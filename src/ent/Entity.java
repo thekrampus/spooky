@@ -9,7 +9,7 @@ import world.Tile;
 
 public abstract class Entity implements Comparable<Entity> {
 	public static final double FRICTION = 0.6; // lower = stickier
-	private Animation anim;
+	protected Animation anim;
 	protected double xCoord, yCoord, xVel, yVel;
 	protected boolean facingLeft = false;
 
@@ -25,8 +25,9 @@ public abstract class Entity implements Comparable<Entity> {
 	 * 
 	 * @param l
 	 *            the Level the entity is acting in
+	 * @return false if the entity needs removal
 	 */
-	public void update(Level l) {
+	public boolean update(Level l) {
 		if(xVel > 0.01)
 			facingLeft = false;
 		else if(xVel < -0.01)
@@ -45,6 +46,8 @@ public abstract class Entity implements Comparable<Entity> {
 			yVel = 0;
 		} else
 			yVel *= FRICTION;
+		
+		return true;
 	}
 
 	/**

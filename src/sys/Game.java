@@ -111,7 +111,7 @@ public class Game extends JFrame {
 		buffer = this.getBufferStrategy();
 
 		// initialize level
-		level = Level.loadLevel("data/levels/debug-big.lvl");
+		level = Level.loadLevel("data/levels/debug.lvl");
 
 		// init level, inputs
 		this.setFocusable(true);
@@ -219,10 +219,12 @@ public class Game extends JFrame {
 	 * Throw input polling at players
 	 */
 	private void input() {
-		if (menuStack.isEmpty())
-			for (Player p : players)
-				p.handleInput();
-		else if (!paused) {
+		if (menuStack.isEmpty()) {
+			if(!paused) {
+				for (Player p : players)
+					p.handleInput();
+			}
+		} else {
 			if (!menuStack.peek().isAlive())
 				menuStack.pop();
 			else
