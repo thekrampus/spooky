@@ -113,8 +113,6 @@ public class Game extends JFrame {
 
 		// initialize level
 		level = Level.loadLevel("data/levels/debug-big.lvl");
-		level.buildHitbox();
-		level.buildBackground();
 
 		// init level, inputs
 		this.setFocusable(true);
@@ -143,7 +141,6 @@ public class Game extends JFrame {
 		for (Controller c : controllers) {
 			System.out.println(c.getType());
 			if (c.getType() == Type.GAMEPAD || c.getType() == Type.STICK)
-			if(c.getType() == Controller.Type.GAMEPAD)
 				gp.add(new GamepadCap(c));
 		}
 
