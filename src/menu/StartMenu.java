@@ -3,23 +3,25 @@ package menu;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-
-import ent.Player;
+import java.util.Random;
 
 import sys.AssetLib;
 import sys.Game;
 import sys.InputMethod;
 import sys.Launcher;
+import ent.Player;
 
 public class StartMenu extends MenuFrame {
-	public static final int WIDTH = 200, HEIGHT = 400;
+	public static final int WIDTH = 220, HEIGHT = 400;
 
 	private Menu menu;
 	private ArrayList<InputMethod> allInputs;
 	private CharacterMenu characterSelect;
+	private String subtitle;
 
 	public StartMenu(final ArrayList<InputMethod> allInputs) {
 		super(Game.centerX - WIDTH / 2, Game.centerY - HEIGHT / 2, WIDTH, HEIGHT);
+		subtitle = Launcher.subtitles[(new Random()).nextInt(Launcher.subtitles.length)];
 
 		this.allInputs = allInputs;
 
@@ -84,9 +86,10 @@ public class StartMenu extends MenuFrame {
 		g.setColor(Color.black);
 		g.setFont(AssetLib.FONT_LARGE);
 		g.drawString("Spooky", frame.x+6, frame.y+36);
-		g.drawString("Dungeon", frame.x+6, frame.y+76);
+		g.drawString("Dungeon", frame.x+6, frame.y+78);
+		g.drawString(subtitle, frame.x+6, frame.y+120);
 		g.setFont(AssetLib.FONT_SMALL);
-		g.drawString("v" + Launcher.VERSION_NUM, frame.x+3, frame.y + (int)frame.getHeight() - 1 - 24);
+		g.drawString("ver " + Launcher.VERSION_NUM + "spooky" + 2*Launcher.VERSION_NUM + "u", frame.x+3, frame.y + (int)frame.getHeight() - 1 - 24);
 		g.drawString("Made for Tech Game Jam 1", frame.x+3, frame.y + (int)frame.getHeight() - 1 - 6);
 		menu.draw(g, (int) frame.getCenterX(), frame.y + 180);
 	}
