@@ -2,6 +2,7 @@ package ent;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
 
 import menu.PauseMenu;
 import sys.Animation;
@@ -32,9 +33,8 @@ public abstract class Player extends Entity {
 		impulse(speed*(a[0]+a[1]), speed*(a[0]-a[1]));
 		attackVector[0] = b[0]+b[1];
 		attackVector[1] = b[0]-b[1];
-		System.out.println(attackVector[0] + ", " + attackVector[1]);
 		
-		if(input.attack() && !hold) {
+		if(input.activate() && !hold) {
 			System.out.println("THWACK");
 			hold = true;
 		}
@@ -44,7 +44,7 @@ public abstract class Player extends Entity {
 			hold = true;
 		}
 		
-		if(!input.attack() && !input.special())
+		if(!input.activate() && !input.special())
 			hold = false;
 		
 		if(input.menu()) {
@@ -59,6 +59,12 @@ public abstract class Player extends Entity {
 	
 	@Override
 	public void update(Level l) {
+		ArrayList<Entity> hazards = l.getPlayerHazards();
+		for(Entity ent : hazards) {
+			if(this.getDistance(ent) < radius)
+				health -= ent.getDamage();
+		}
+		
 		if(xVel > 0.01)
 			facingLeft = false;
 		else if(xVel < -0.01)
@@ -114,7 +120,6 @@ public abstract class Player extends Entity {
 
 		@Override
 		protected Attack fireAttack(double[] direction) {
-			//System.out.println("ATTACKING - " + direction[0] + ", " + direction[1]);
 			return new Attack(xCoord, yCoord, direction[0], direction[1], 6, .1, 5, new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
 		}
 	}
@@ -127,8 +132,8 @@ public abstract class Player extends Entity {
 
 		@Override
 		protected Attack fireAttack(double[] direction) {
-			return new Attack(xCoord, yCoord, direction[0], direction[1], 4, .09, 5,
-					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 4, .09, 4,
+					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 70, 70, 4));
 		}
 	}
 	
@@ -141,8 +146,8 @@ public abstract class Player extends Entity {
 
 		@Override
 		protected Attack fireAttack(double[] direction) {
-			return new Attack(xCoord, yCoord, direction[0], direction[1], 2, .1, 3,
-					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 2, .1, 2,
+					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 70, 70, 4));
 		}
 		
 		@Override

@@ -13,7 +13,7 @@ public class PauseMenu extends MenuFrame {
 	private Menu menu;
 
 	public PauseMenu(int x, int y, InputMethod input) {
-		super(x - WIDTH/2, y - HEIGHT / 2, WIDTH, HEIGHT);
+		super(x, y, WIDTH, HEIGHT);
 		Game.setPaused(true);
 
 		this.input = input;
@@ -49,7 +49,7 @@ public class PauseMenu extends MenuFrame {
 			up = true;
 		if (input.stickL()[1] > .5)
 			down = true;
-		if (getInput().attack())
+		if (getInput().activate())
 			select = true;
 
 		if(!hold) {

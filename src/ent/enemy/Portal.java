@@ -8,6 +8,7 @@ import sys.Animation;
 import sys.AssetLib;
 import world.Level;
 import world.Tile;
+import ent.Entity;
 import ent.Flash;
 
 public abstract class Portal extends Enemy {
@@ -15,14 +16,22 @@ public abstract class Portal extends Enemy {
 	private ArrayList<Enemy> children;
 
 	public Portal(double x, double y, int spawnRate, int maxChildren) {
-		super(x+.5, y+.5, 0, 25, 0, new Animation(AssetLib.SHEET_PORTAL, 0, 6, 120, 59, 12));
+		super(x+.5, y+.5, 0, 80, 0, new Animation(AssetLib.SHEET_PORTAL, 0, 6, 120, 59, 12));
 		children = new ArrayList<Enemy>();
 		this.timer = this.spawnDelay = spawnRate;
 		this.maxChildren = maxChildren;
+		
+		damtype = DamageType.HARMLESS;
 	}
 	
 	@Override
 	public void update(Level l) {
+		ArrayList<Entity> hazards = l.getEnemyHazards();
+		for(Entity ent : hazards) {
+			if(this.getDistance(ent) < radius)
+				health -= ent.getDamage();
+		}
+		
 		if(timer <= 0) {
 			if(children.size() < maxChildren) {
 				System.out.println("Spawning!");

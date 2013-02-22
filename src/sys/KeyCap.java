@@ -148,7 +148,7 @@ public class KeyCap implements KeyListener, InputMethod{
 	}
 
 	@Override
-	public boolean attack() {
+	public boolean activate() {
 		return key_space;
 	}
 

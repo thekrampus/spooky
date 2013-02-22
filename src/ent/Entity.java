@@ -10,9 +10,10 @@ import world.Tile;
 public abstract class Entity implements Comparable<Entity> {
 	public static enum DamageType { HURTS_PLAYERS, HURTS_ENEMIES, HARMLESS };
 	protected DamageType damtype;
+	protected int damage = 0;
 	protected double friction = 0.6; // lower = stickier
 	protected Animation anim;
-	protected double xCoord, yCoord, xVel, yVel;
+	protected double xCoord, yCoord, xVel, yVel, radius;
 	protected boolean facingLeft = false;
 
 	public Entity(double x, double y, Animation a) {
@@ -20,6 +21,7 @@ public abstract class Entity implements Comparable<Entity> {
 		this.yCoord = y;
 		this.anim = a;
 		this.xVel = this.yVel = 0;
+		this.radius = .4;
 		damtype = DamageType.HARMLESS;
 	}
 
@@ -125,5 +127,16 @@ public abstract class Entity implements Comparable<Entity> {
 	public boolean isAlive() {
 		return true;
 	}
+	
+	public DamageType getDamType() {
+		return damtype;
+	}
 
+	public int getDamage() {
+		return damage;
+	}
+	
+	public double getDistance(Entity other) {
+		return Math.sqrt(Math.pow(xCoord - other.getX(), 2) + Math.pow(yCoord - other.getY(), 2));
+	}
 }

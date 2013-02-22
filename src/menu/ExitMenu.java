@@ -41,7 +41,7 @@ public class ExitMenu extends MenuFrame {
 			up = true;
 		if (input.stickL()[1] > .5)
 			down = true;
-		if (input.attack())
+		if (input.activate())
 			select = true;
 
 		if(!hold) {

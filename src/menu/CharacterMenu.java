@@ -42,7 +42,7 @@ public class CharacterMenu extends MenuFrame {
 			if(allInputs.get(i).menu())
 				alive = false;
 			
-			if(allInputs.get(i).attack() && playerCount < MAX_PLAYERS) {
+			if(allInputs.get(i).activate() && playerCount < MAX_PLAYERS) {
 				charFrames[playerCount].setInput(allInputs.get(i));
 				playerCount++;
 				allInputs.remove(i);
@@ -119,7 +119,7 @@ class CharSelectFrame extends MenuFrame {
 	public void control() {
 		if(input != null) {
 			boolean special = input.special();
-			boolean attack = input.attack();
+			boolean attack = input.activate();
 			double xAxis = input.stickL()[0];
 			if(!hold) {
 				if(xAxis > 0) {

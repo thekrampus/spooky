@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -29,7 +30,7 @@ public class Game extends JFrame {
 	private static boolean running; // Set this to false when you decide the game is over!
 	private static boolean paused = false; // Game logic will only run when this is false - drawing will still occur, though!
 
-	private Level level;
+	private static Level level;
 	private static ArrayList<Player> players;
 	protected static Stack<MenuFrame> menuStack;
 
@@ -67,15 +68,12 @@ public class Game extends JFrame {
 		buffer = this.getBufferStrategy();
 
 		// initialize menu background level
-		level = Level.loadLevel("data/levels/menuscene.lvl");
-
 		ArrayList<GamepadCap> gamepads = initControllers();
 		players = new ArrayList<Player>();
-		players.add(new Player.DummyPlayer(1, 1));
-		players.add(new Player.DummyPlayer(5, 5));
+		players.add(new Player.DummyPlayer(1, 0.9));
+		players.add(new Player.DummyPlayer(5, 4.9));
 
-		for (Player p : players)
-			level.addEntity(p);
+		Game.loadLevel("data/levels/menuscene.lvl", players);
 
 		// initialise start menu
 		ArrayList<InputMethod> allInputs = new ArrayList<InputMethod>();
@@ -110,9 +108,6 @@ public class Game extends JFrame {
 		this.createBufferStrategy(2);
 		buffer = this.getBufferStrategy();
 
-		// initialize level
-		level = Level.loadLevel("data/levels/debug.lvl");
-
 		// init level, inputs
 		this.setFocusable(true);
 		ArrayList<InputMethod> allInputs = new ArrayList<InputMethod>();
@@ -124,6 +119,8 @@ public class Game extends JFrame {
 			if (in instanceof KeyCap)
 				this.addKeyListener((KeyCap) in);
 		}
+		
+		Game.loadLevel("data/levels/debug.lvl", players);
 
 		this.requestFocus();
 		
@@ -358,6 +355,15 @@ public class Game extends JFrame {
 	
 	public static Point getCamOffset() {
 		return cambox.getLocation();
+	}
+	
+	public static void loadLevel(String path, ArrayList<Player> p) {
+		level = new Level(p);
+		if(level.loadFile(new File(path))) {
+			level.buildLevelProps();
+		} else {
+			System.exit(0);
+		}
 	}
 
 }

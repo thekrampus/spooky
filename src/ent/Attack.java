@@ -7,7 +7,6 @@ import world.Level;
 
 public class Attack extends Entity {
 	private double range, step;
-	private int damage;
 
 	public Attack(double x, double y, double xV, double yV, double range, double speed, int damage, Animation a) {
 		super(x, y, a);
@@ -22,6 +21,8 @@ public class Attack extends Entity {
 			this.range = 0;
 
 		step = Math.sqrt(xVel * xVel + yVel * yVel);
+		
+		damtype = DamageType.HURTS_ENEMIES;
 	}
 
 	@Override
@@ -42,6 +43,12 @@ public class Attack extends Entity {
 	@Override
 	public boolean isAlive() {
 		return range > 0;
+	}
+	
+	@Override
+	public int getDamage() {
+		this.range = 0;
+		return super.getDamage();
 	}
 
 }

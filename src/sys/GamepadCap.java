@@ -33,7 +33,7 @@ public class GamepadCap implements InputMethod {
 	}
 
 	@Override
-	public boolean attack() {
+	public boolean activate() {
 		return button_A;
 	}
 

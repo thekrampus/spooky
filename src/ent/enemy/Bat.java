@@ -41,6 +41,12 @@ public class Bat extends Enemy {
 					frame.getHeight(), null);
 	}
 	
+	@Override
+	public int getDamage() {
+		this.health = 0;
+		return super.getDamage();
+	}
+	
 	public static class BatPortal extends Portal {
 
 		public BatPortal(double x, double y) {

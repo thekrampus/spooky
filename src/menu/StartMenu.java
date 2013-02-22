@@ -57,7 +57,7 @@ public class StartMenu extends MenuFrame {
 				up = true;
 			if (in.stickL()[1] > .5)
 				down = true;
-			if (in.attack())
+			if (in.activate())
 				select = true;
 		}
 

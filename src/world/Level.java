@@ -9,28 +9,25 @@ import java.io.FileInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import ent.Entity;
+import ent.Player;
 
 public class Level {
 	private Tile[][] tiles;
 	private Area hitbox;
-	private ArrayList<Entity> entities;
+	private ArrayList<Entity> entities, playerHazards, enemyHazards;
+	private ArrayList<Player> players;
 	private BufferedImage background;
 	private int bgOffset;
 
-	public Level() {
-		entities = new ArrayList<Entity>();
-	}
-
-	public Level(int size) {
-		tiles = new Tile[size][size];
-		entities = new ArrayList<Entity>();
-
-		for (int i = 0; i < size; i++)
-			Arrays.fill(tiles[i], Tile.EMPTY);
+	public Level(ArrayList<Player> players) {
+		this.entities = new ArrayList<Entity>();
+		this.playerHazards = new ArrayList<Entity>();
+		this.enemyHazards = new ArrayList<Entity>();
+		this.players = players;
+		this.entities.addAll(players);
 	}
 
 	/**
@@ -126,6 +123,30 @@ public class Level {
 
 	public void addEntity(Entity ent) {
 		entities.add(ent);
+		switch(ent.getDamType()) {
+		case HURTS_PLAYERS:
+			playerHazards.add(ent);
+			break;
+		case HURTS_ENEMIES:
+			enemyHazards.add(ent);
+			break;
+		}
+	}
+	
+	public ArrayList<Entity> getEnts() {
+		return entities;
+	}
+	
+	public ArrayList<Entity> getPlayerHazards() {
+		return playerHazards;
+	}
+	
+	public ArrayList<Entity> getEnemyHazards() {
+		return enemyHazards;
+	}
+	
+	public ArrayList<Player> getPlayers() {
+		return players;
 	}
 
 	/**
@@ -139,34 +160,21 @@ public class Level {
 				i--;
 			}
 		}
-	}
-
-	@Deprecated
-	public static Level buildDebug() {
-		Level l = new Level();
-		l.loadFile(new File("data/levels/debug-huge.lvl"));
-		return l;
-	}
-
-	/**
-	 * Try and load a Level from a file path
-	 * 
-	 * @param path
-	 *            Path of file to load
-	 * @return Level loaded from file
-	 */
-	public static Level loadLevel(String path) {
-		Level l = new Level();
-		if(l.loadFile(new File(path))) {
-//			l.buildHitbox();
-//			l.buildBackground();
-			l.buildLevelProps();
-			return l;
-		} else {
-			System.exit(0);
-			return null;
+		
+		// cull dead player and enemy hazards
+		for(int i = 0; i < playerHazards.size(); i++) {
+			if(!entities.contains(playerHazards.get(i))) {
+				playerHazards.remove(i);
+				i--;
+			}
 		}
-			
+		
+		for(int i = 0; i < enemyHazards.size(); i++) {
+			if(!entities.contains(enemyHazards.get(i))) {
+				enemyHazards.remove(i);
+				i--;
+			}
+		}
 	}
 
 	/**
