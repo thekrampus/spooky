@@ -355,5 +355,9 @@ public class Game extends JFrame {
 	public static void stopAllInstances() {
 		running = false;
 	}
+	
+	public static Point getCamOffset() {
+		return cambox.getLocation();
+	}
 
 }

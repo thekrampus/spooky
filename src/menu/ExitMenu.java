@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import sys.AssetLib;
-import sys.Game;
 import sys.InputMethod;
 
 public class ExitMenu extends MenuFrame {
@@ -12,8 +11,8 @@ public class ExitMenu extends MenuFrame {
 	private InputMethod input;
 	private Menu menu;
 
-	public ExitMenu(InputMethod input) {
-		super(Game.centerX - WIDTH/2, Game.centerY - HEIGHT / 2, WIDTH, HEIGHT);
+	public ExitMenu(int x, int y, InputMethod input) {
+		super(x - WIDTH/2, y - HEIGHT / 2, WIDTH, HEIGHT);
 		
 		this.input = input;
 		

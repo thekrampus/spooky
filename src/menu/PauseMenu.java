@@ -12,8 +12,8 @@ public class PauseMenu extends MenuFrame {
 	private InputMethod input;
 	private Menu menu;
 
-	public PauseMenu(InputMethod input) {
-		super(Game.centerX - WIDTH/2, Game.centerY - HEIGHT / 2, WIDTH, HEIGHT);
+	public PauseMenu(int x, int y, InputMethod input) {
+		super(x - WIDTH/2, y - HEIGHT / 2, WIDTH, HEIGHT);
 		Game.setPaused(true);
 
 		this.input = input;
@@ -31,7 +31,7 @@ public class PauseMenu extends MenuFrame {
 		menu.addItem(new MenuItem("exit") {
 			public void activate() {
 				//confirm exit
-				Game.pushMenu(new ExitMenu(getInput()));
+				Game.pushMenu(new ExitMenu((int)frame.getCenterX()+30, (int)frame.getCenterY()+30, getInput()));
 			}
 		});	
 	}

@@ -8,7 +8,9 @@ import world.Level;
 import world.Tile;
 
 public abstract class Entity implements Comparable<Entity> {
-	public static final double FRICTION = 0.6; // lower = stickier
+	public static enum DamageType { HURTS_PLAYERS, HURTS_ENEMIES, HARMLESS };
+	protected DamageType damtype;
+	protected double friction = 0.6; // lower = stickier
 	protected Animation anim;
 	protected double xCoord, yCoord, xVel, yVel;
 	protected boolean facingLeft = false;
@@ -18,6 +20,7 @@ public abstract class Entity implements Comparable<Entity> {
 		this.yCoord = y;
 		this.anim = a;
 		this.xVel = this.yVel = 0;
+		damtype = DamageType.HARMLESS;
 	}
 
 	/**
@@ -33,14 +36,14 @@ public abstract class Entity implements Comparable<Entity> {
 			xCoord -= xVel;
 			xVel = 0;
 		} else
-			xVel *= FRICTION;
+			xVel *= friction;
 
 		yCoord += yVel;
 		if (!l.isInBounds(xCoord, yCoord)) {
 			yCoord -= yVel;
 			yVel = 0;
 		} else
-			yVel *= FRICTION;
+			yVel *= friction;
 	}
 
 	/**
@@ -58,9 +61,24 @@ public abstract class Entity implements Comparable<Entity> {
 			frame = anim.getCurrentFrame();
 
 		if (facingLeft)
-			g.drawImage(frame, c[0] - Tile.TILE_WIDTH / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, null);
+			g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, null);
 		else
-			g.drawImage(frame, c[0] + Tile.TILE_WIDTH / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, -frame.getWidth(),
+			g.drawImage(frame, c[0] + frame.getWidth() / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10, -frame.getWidth(),
+					frame.getHeight(), null);
+	}
+	
+	public void draw(int elevation, Graphics2D g) {
+		int[] c = Tile.getScreenCoords(xCoord, yCoord);
+		BufferedImage frame = null;
+		if (Math.abs(xVel) > .005 || Math.abs(yVel) > .005)
+			frame = anim.getNextFrame();
+		else
+			frame = anim.getCurrentFrame();
+
+		if (facingLeft)
+			g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10 - elevation, null);
+		else
+			g.drawImage(frame, c[0] + frame.getWidth() / 2, c[1] - frame.getHeight() + Tile.TILE_HEIGHT - 10 - elevation, -frame.getWidth(),
 					frame.getHeight(), null);
 	}
 

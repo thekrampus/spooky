@@ -56,7 +56,7 @@ public class GamepadCap implements InputMethod {
 				while (running) {
 					running = gamepad.poll();
 					while(queue.getNextEvent(event)) {
-						//System.out.println(gamepad.getName() + " - " + event.getComponent().getName() + " - " + event.getValue());
+						//System.out.println(gamepad.getName() + " - " + event.getComponent() + " - " + event.getValue());
 						
 						if(event.getComponent().getIdentifier().equals(Identifier.Button._0)) {
 							button_A = (event.getValue()!=0);
@@ -68,6 +68,10 @@ public class GamepadCap implements InputMethod {
 							stickL[0] = event.getValue();
 						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.Y)) {
 							stickL[1] = event.getValue();
+						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.RX)) {
+							stickR[0] = event.getValue();
+						} else if(event.getComponent().getIdentifier().equals(Identifier.Axis.RY)) {
+							stickR[1] = event.getValue();
 						}
 						
 					}

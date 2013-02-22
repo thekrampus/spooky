@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AssetLib {
-	public static BufferedImage SHEET_SKELLY, SHEET_PORTAL, SHEET_FLASH, SHEET_BAT, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
+	public static BufferedImage SHEET_SKELLY, SHEET_GHOST, SHEET_PROJECTILE, SHEET_PORTAL, SHEET_FLASH, SHEET_BAT, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
 
 	public static Font FONT_LARGE, FONT_SMALL;
 
@@ -23,6 +23,8 @@ public class AssetLib {
 	 */
 	public static void load() throws IOException, FontFormatException {
 		SHEET_SKELLY = loadImage("data/skeleton-optimized.png");
+		SHEET_GHOST = loadImage("data/ghost.png");
+		SHEET_PROJECTILE = loadImage("data/projectile.png");
 		SHEET_PORTAL = loadImage("data/pentagram-anim.png");
 		SHEET_FLASH = loadImage("data/spawnimation.png");
 		SHEET_BAT = loadImage("data/bat1-optimized.png");

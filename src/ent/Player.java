@@ -1,6 +1,7 @@
 package ent;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import menu.PauseMenu;
 import sys.Animation;
@@ -14,18 +15,24 @@ public abstract class Player extends Entity {
 	
 	private InputMethod input;
 	private boolean hold = true;
-	private int health;
+	private int health, attackTimer, attackDelay;
+	private double[] attackVector = {0.,0.};
 
-	public Player(double x, double y, int health, Animation a, InputMethod input) {
+	public Player(double x, double y, int health, int attackDelay, Animation a, InputMethod input) {
 		super(x, y, a);
 		this.input = input;
 		this.health = health;
+		this.attackTimer = this.attackDelay = attackDelay;
 	}
 
 	public void handleInput() {
 		double[] a = input.stickL();
+		double[] b = input.stickR();
 		
 		impulse(speed*(a[0]+a[1]), speed*(a[0]-a[1]));
+		attackVector[0] = b[0]+b[1];
+		attackVector[1] = b[0]-b[1];
+		System.out.println(attackVector[0] + ", " + attackVector[1]);
 		
 		if(input.attack() && !hold) {
 			System.out.println("THWACK");
@@ -41,9 +48,12 @@ public abstract class Player extends Entity {
 			hold = false;
 		
 		if(input.menu()) {
-			//int[] sc = this.getScreenCoords();
+			int[] sc = this.getScreenCoords();
+			Point offset = Game.getCamOffset();
+			sc[0] -= offset.x;
+			sc[1] -= offset.y;
 			//Game.pushMenu(new PauseMenu(new Point(sc[0], sc[1]), input));
-			Game.pushMenu(new PauseMenu(input));
+			Game.pushMenu(new PauseMenu(sc[0], sc[1], input));
 		}
 	}
 	
@@ -71,8 +81,17 @@ public abstract class Player extends Entity {
 			yCoord -= yVel;
 		}
 		
-		xVel *= FRICTION;
-		yVel *= FRICTION;
+		xVel *= friction;
+		yVel *= friction;
+		
+		if(attackTimer <= 0) {
+			if(!(attackVector[0] == 0 && attackVector[1] == 0)) {
+				l.addEntity(fireAttack(attackVector));
+				attackVector[0] = 0; attackVector[1] = 0;
+				attackTimer = attackDelay;
+			}
+		} else
+			attackTimer--;
 	}
 	
 	public InputMethod getInput() {
@@ -83,17 +102,54 @@ public abstract class Player extends Entity {
 	public boolean isAlive() {
 		return health > 0;
 	}
+	
+	protected abstract Attack fireAttack(double[] direction);
 
 	public static class DebugPlayer extends Player {
 
 		public DebugPlayer(double x, double y, InputMethod input) {
-			super(x, y, 100, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10), input);
+			super(x, y, 100, 10, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10), input);
 			speed = 0.02;
 		}
 
-		public void draw(Graphics2D g) {
-			super.draw(g);
+		@Override
+		protected Attack fireAttack(double[] direction) {
+			//System.out.println("ATTACKING - " + direction[0] + ", " + direction[1]);
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 6, .1, 5, new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
 		}
+	}
+	
+	public static class Warrior extends Player {
+		public Warrior(double x, double y, InputMethod input) {
+			super(x, y, 100, 10, new Animation(AssetLib.SHEET_SKELLY, 0, 2, 129, 205, 10), input);
+			speed = 0.02;
+		}
+
+		@Override
+		protected Attack fireAttack(double[] direction) {
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 4, .09, 5,
+					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
+		}
+	}
+	
+	public static class Rogue extends Player {
+
+		public Rogue(double x, double y, InputMethod input) {
+			super(x, y, 70, 5, new Animation(AssetLib.SHEET_GHOST, 0, 2, 139, 107, 20), input);
+			speed = 0.03;
+		}
+
+		@Override
+		protected Attack fireAttack(double[] direction) {
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 2, .1, 3,
+					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 67, 71, 4));
+		}
+		
+		@Override
+		public void draw(Graphics2D g) {
+			this.draw(70, g);
+		}
+		
 	}
 	
 	public static class DummyPlayer extends DebugPlayer {
@@ -107,7 +163,5 @@ public abstract class Player extends Entity {
 		public void handleInput() {
 			//Wooo spooky!
 		}
-
-		
 	}
 }

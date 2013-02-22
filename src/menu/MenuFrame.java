@@ -14,9 +14,10 @@ public abstract class MenuFrame {
 	
 	public void draw(Graphics2D g) {
 		//TODO: In the near future let's be super cool and texture this
-		
 		g.setColor(Color.pink);
 		g.fill(frame);
+		g.setColor(Color.white);
+		g.draw(frame);
 	}
 	
 	public abstract void control();
