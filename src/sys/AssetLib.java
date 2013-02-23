@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AssetLib {
-	public static BufferedImage SHEET_SKELLY, SHEET_GHOST, SHEET_PROJECTILE, SHEET_PORTAL, SHEET_FLASH, SHEET_BAT, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_NULL;
+	public static BufferedImage SHEET_SKELLY, SHEET_GHOST, SHEET_PROJECTILE, SHEET_PORTAL, SHEET_FLASH, SHEET_BAT, TILE_DEFAULT_FLOOR, TILE_DEFAULT_WALL, TILE_STAIRS, TILE_NULL;
 
 	public static Font FONT_LARGE, FONT_SMALL;
 
@@ -30,6 +30,7 @@ public class AssetLib {
 		SHEET_BAT = loadImage("data/bat1-optimized.png");
 		TILE_DEFAULT_FLOOR = loadImage("data/tile-stone.png");
 		TILE_DEFAULT_WALL = loadImage("data/stonewall-3.png");
+		TILE_STAIRS = loadImage("data/stone-stairs.png");
 		TILE_NULL = loadImage("data/tile-null.png");
 
 		//Font f = Font.createFont(Font.TRUETYPE_FONT, new File("data/Fipps-Regular.otf"));

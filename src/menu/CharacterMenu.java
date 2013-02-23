@@ -151,8 +151,8 @@ class CharSelectFrame extends MenuFrame {
 	public Player buildPlayer() {
 		Player p;
 		Character selection = Character.values()[index];
-		double spawnX = Math.random() + .5;
-		double spawnY = Math.random() + .5;
+		double spawnX = Math.random() + 1;
+		double spawnY = Math.random() + 1;
 		switch(selection) {
 		case SKELLY:
 			p = new Warrior(spawnX, spawnY, input);

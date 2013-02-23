@@ -59,7 +59,7 @@ public abstract class Portal extends Enemy {
 		int[] c = Tile.getScreenCoords(xCoord, yCoord);
 		BufferedImage frame = anim.getNextFrame();
 
-		g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - frame.getHeight() + frame.getHeight() - 50, null);
+		g.drawImage(frame, c[0] - frame.getWidth() / 2, c[1] - 50, null);
 	}
 	
 	@Override

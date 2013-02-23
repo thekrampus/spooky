@@ -35,9 +35,12 @@ public class Game extends JFrame {
 	protected static Stack<MenuFrame> menuStack;
 
 	private static Rectangle cambox;
-	private static final int CAM_BUFFER = 150; // How close a player needs to be to the edge of the screen to start panning
+	private static final int CAM_BUFFER = 200; // How close a player needs to be to the edge of the screen to start panning
 
 	public static int centerX, centerY;
+	
+	private static String levelDir;
+	private static int levelNum;
 
 	public Game() {
 		super("WHERE'S MY SUPERSUIT?!");
@@ -70,8 +73,8 @@ public class Game extends JFrame {
 		// initialize menu background level
 		ArrayList<GamepadCap> gamepads = initControllers();
 		players = new ArrayList<Player>();
-		players.add(new Player.DummyPlayer(1, 0.9));
-		players.add(new Player.DummyPlayer(5, 4.9));
+		players.add(new Player.DummyPlayer(2, 2));
+		players.add(new Player.DummyPlayer(4, 4));
 
 		Game.loadLevel("data/levels/menuscene.lvl", players);
 
@@ -82,7 +85,7 @@ public class Game extends JFrame {
 		menuStack = new Stack<MenuFrame>();
 		menuStack.push(new StartMenu(allInputs));
 
-		cambox.setLocation(50, -300);
+		cambox.setLocation(160, -200);
 		running = true;
 	}
 
@@ -120,7 +123,8 @@ public class Game extends JFrame {
 				this.addKeyListener((KeyCap) in);
 		}
 		
-		Game.loadLevel("data/levels/debug.lvl", players);
+		//Game.loadLevel("data/levels/debug.lvl", players);
+		Game.startLevelSet("data/levels/demo/");
 
 		this.requestFocus();
 		
@@ -191,6 +195,24 @@ public class Game extends JFrame {
 		g2d.translate(-(cambox.getX() - CAM_BUFFER), -(cambox.getY() - CAM_BUFFER));
 		level.draw(g2d);
 
+		//draw player health bars
+		for(Player p : players) {
+			int[] c = p.getScreenCoords();
+			c[0] -= Player.MAX_HEALTH/3;
+			c[1] += Tile.TILE_HEIGHT/2;
+			int h = p.getHealth();
+			
+			if(h < Player.MAX_HEALTH/4)
+				g2d.setColor(Color.red);
+			else
+				g2d.setColor(Color.green);
+			
+			g2d.fillRect(c[0], c[1], h/2, 6);
+			
+			g2d.setColor(Color.black);
+			g2d.drawRect(c[0], c[1], Player.MAX_HEALTH/2, 6);
+		}
+		
 		// g2d.dispose();
 		// g2d = (Graphics2D) buffer.getDrawGraphics();
 		g2d.translate((cambox.getX() - CAM_BUFFER), (cambox.getY() - CAM_BUFFER));
@@ -357,11 +379,40 @@ public class Game extends JFrame {
 		return cambox.getLocation();
 	}
 	
-	public static void loadLevel(String path, ArrayList<Player> p) {
+	public static boolean loadLevel(String path, ArrayList<Player> p) {
 		level = new Level(p);
 		if(level.loadFile(new File(path))) {
 			level.buildLevelProps();
+			return true;
 		} else {
+			return false;
+		}
+	}
+	
+	public static void startLevelSet(String dir) {
+		levelNum = 1;
+		levelDir = dir;
+		if(loadLevel(levelDir + levelNum + ".lvl", players))
+			System.out.println("Starting new levelset...");
+		else {
+			System.out.println("Bad levelset dir, exiting");
+			System.exit(0);
+		}			
+	}
+	
+	public static void nextLevel() {
+		for(Player p : players) {
+			double spawnX = Math.random() + 1;
+			double spawnY = Math.random() + 1;
+			p.setCoords(spawnX, spawnY);
+			p.damage(-Player.MAX_HEALTH/3);
+		}
+		
+		levelNum++;
+		if(loadLevel(levelDir + levelNum + ".lvl", players))
+			System.out.println("Next level loaded!");
+		else {
+			System.out.println("Levelset over...");
 			System.exit(0);
 		}
 	}

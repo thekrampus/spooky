@@ -14,6 +14,7 @@ public class Enemy extends Entity {
 		super(x, y, a);
 		this.speed = speed;
 		this.health = maxHealth;
+		this.damage = damage;
 		damtype = DamageType.HURTS_PLAYERS;
 	}
 	

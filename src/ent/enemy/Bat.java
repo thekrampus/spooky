@@ -50,7 +50,7 @@ public class Bat extends Enemy {
 	public static class BatPortal extends Portal {
 
 		public BatPortal(double x, double y) {
-			super(x, y, 150, 15);
+			super(x, y, 100, 15);
 		}
 
 		@Override

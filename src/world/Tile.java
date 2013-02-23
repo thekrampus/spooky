@@ -7,11 +7,12 @@ import java.awt.image.BufferedImage;
 
 import sys.AssetLib;
 import ent.Entity;
+import ent.Stairs;
 import ent.WallEnt;
 import ent.enemy.Bat;
 
 public enum Tile {
-	EMPTY, FLOOR, WALL, PORTAL_BAT;
+	EMPTY, FLOOR, WALL, PORTAL_BAT, STAIRS;
 
 	public static final int TILE_WIDTH = 160, TILE_HEIGHT = 80; // default size of tiles
 
@@ -22,6 +23,7 @@ public enum Tile {
 		switch (t) {
 		case EMPTY:
 		case WALL:
+		case STAIRS:
 			return new Area();
 		case FLOOR:
 		case PORTAL_BAT:
@@ -50,6 +52,10 @@ public enum Tile {
 			sprite = AssetLib.TILE_DEFAULT_WALL;
 			height = 240;
 			break;
+		case STAIRS:
+			sprite = AssetLib.TILE_STAIRS;
+			height = 160;
+			break;
 		case PORTAL_BAT:
 			sprite = AssetLib.SHEET_PORTAL.getSubimage(0, 59, TILE_WIDTH, TILE_HEIGHT);
 			break;
@@ -71,6 +77,8 @@ public enum Tile {
 			return AssetLib.TILE_DEFAULT_FLOOR.getSubimage(0, 0, TILE_WIDTH, TILE_HEIGHT);
 		case WALL:
 			return AssetLib.TILE_DEFAULT_WALL;
+		case STAIRS:
+			return AssetLib.TILE_STAIRS;
 		case PORTAL_BAT:
 			return AssetLib.SHEET_BAT.getSubimage(0, 0, 58, 110);
 		default:
@@ -86,6 +94,8 @@ public enum Tile {
 		switch(t) {
 		case WALL:
 			return new WallEnt(x, y);
+		case STAIRS:
+			return new Stairs(x, y);
 		case PORTAL_BAT:
 			return new Bat.BatPortal(x, y);
 		default:

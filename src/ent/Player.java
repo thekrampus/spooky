@@ -12,6 +12,7 @@ import sys.InputMethod;
 import world.Level;
 
 public abstract class Player extends Entity {
+	public static final int MAX_HEALTH = 100;
 	protected double speed;
 	
 	private InputMethod input;
@@ -62,7 +63,7 @@ public abstract class Player extends Entity {
 		ArrayList<Entity> hazards = l.getPlayerHazards();
 		for(Entity ent : hazards) {
 			if(this.getDistance(ent) < radius)
-				health -= ent.getDamage();
+				damage(ent.getDamage());
 		}
 		
 		if(xVel > 0.01)
@@ -107,6 +108,16 @@ public abstract class Player extends Entity {
 	@Override
 	public boolean isAlive() {
 		return health > 0;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public void damage(int amount) {
+		health -= amount;
+		if(health > Player.MAX_HEALTH)
+			health = Player.MAX_HEALTH;
 	}
 	
 	protected abstract Attack fireAttack(double[] direction);
