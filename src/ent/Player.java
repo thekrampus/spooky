@@ -59,7 +59,7 @@ public abstract class Player extends Entity {
 	}
 	
 	@Override
-	public void update(Level l) {
+	public boolean update(Level l) {
 		ArrayList<Entity> hazards = l.getPlayerHazards();
 		for(Entity ent : hazards) {
 			if(this.getDistance(ent) < radius)
@@ -99,6 +99,8 @@ public abstract class Player extends Entity {
 			}
 		} else
 			attackTimer--;
+		
+		return true;
 	}
 	
 	public InputMethod getInput() {
