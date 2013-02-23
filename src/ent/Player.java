@@ -142,7 +142,7 @@ public abstract class Player extends Entity {
 
 		@Override
 		protected Attack fireAttack(double[] direction) {
-			return new Attack(xCoord, yCoord, direction[0], direction[1], 4, .09, 4,
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 4, .09, 7,
 					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 70, 70, 4));
 		}
 	}
@@ -156,7 +156,7 @@ public abstract class Player extends Entity {
 
 		@Override
 		protected Attack fireAttack(double[] direction) {
-			return new Attack(xCoord, yCoord, direction[0], direction[1], 2, .1, 2,
+			return new Attack(xCoord, yCoord, direction[0], direction[1], 3, .1, 3,
 					new Animation(AssetLib.SHEET_PROJECTILE, 0, 7, 70, 70, 4));
 		}
 		
