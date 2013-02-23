@@ -13,7 +13,9 @@ public class WallEnt extends Entity{
 	}
 	
 	@Override
-	public void update(Level l) {}
+	public boolean update(Level l) {
+		return true;
+	}
 	
 	@Override
 	public void draw(Graphics2D g) {

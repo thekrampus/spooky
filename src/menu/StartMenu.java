@@ -36,11 +36,11 @@ public class StartMenu extends MenuFrame {
 			}
 		});
 
-		menu.addItem(new MenuItem("options") {
+		/*menu.addItem(new MenuItem("options") {
 			public void activate() {
 				System.out.println("Aint no mothafuckin options!");
 			}
-		});
+		}); */
 
 		menu.addItem(new MenuItem("exit") {
 			public void activate() {
