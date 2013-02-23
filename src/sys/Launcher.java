@@ -8,7 +8,7 @@ import ent.Player;
 
 public class Launcher {
 	public static final double VERSION_NUM = 1.8;
-	public static String[] subtitles = { "XP", "Revenge", "3000", "Part ||", "Turbo", "64", "HD", "Simulator", "Gaiden", "Black Ops", "Episode 3", "Zero"};
+	public static String[] subtitles = { "2006", "XP", "Revenge", "3000", "Part ||", "Turbo", "64", "HD", "Simulator", "Gaiden", "Black Ops", "Episode 3", "Zero"};
 	
 	public static void main(String[] args) {
 		// load some fuckin libraries
