@@ -280,7 +280,7 @@ public class Game extends JFrame {
 		for (Player p : players) {
 			if (p != e) {
 				int[] pc = p.getScreenCoords();
-				if (!cambox.contains(pc[0], pc[1])) {
+				if (!cambox.contains(pc[0], pc[1]) && p.isAlive()) {
 					// System.out.println("Can't pan cam! " + pc[0] + ", " + pc[1]);
 					cambox.translate((int) -dX, (int) -dY);
 					return false;
@@ -407,6 +407,8 @@ public class Game extends JFrame {
 			p.setCoords(spawnX, spawnY);
 			p.damage(-Player.MAX_HEALTH/3);
 		}
+		
+		cambox.setLocation((int)players.get(0).getX()-30, (int)players.get(0).getY()-30);
 		
 		levelNum++;
 		if(loadLevel(levelDir + levelNum + ".lvl", players))
