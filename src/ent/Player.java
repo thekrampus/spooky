@@ -45,17 +45,16 @@ public abstract class Player extends Entity {
 			hold = true;
 		}
 		
-		if(!input.activate() && !input.special())
-			hold = false;
-		
-		if(input.menu()) {
+		if(input.menu() && !hold) {
 			int[] sc = this.getScreenCoords();
 			Point offset = Game.getCamOffset();
 			sc[0] -= offset.x;
 			sc[1] -= offset.y;
-			//Game.pushMenu(new PauseMenu(new Point(sc[0], sc[1]), input));
 			Game.pushMenu(new PauseMenu(sc[0], sc[1], input));
 		}
+		
+		if(!input.activate() && !input.special() && !input.menu())
+			hold = false;
 	}
 	
 	@Override

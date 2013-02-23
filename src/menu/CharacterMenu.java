@@ -74,6 +74,11 @@ public class CharacterMenu extends MenuFrame {
 	}
 	
 	public void closeAndBuildPlayers() {
+		for(CharSelectFrame csf : charFrames) {
+			if(csf.isAlive() && !csf.isReady())
+				return;
+		}
+		
 		playerList = new ArrayList<Player>();
 		for(int i = 0; i < playerCount; i++) {
 			playerList.add(charFrames[i].buildPlayer());
@@ -96,14 +101,19 @@ class CharSelectFrame extends MenuFrame {
 			anim = a;
 		}
 		
-		public BufferedImage getFrame() {
+		public BufferedImage getNext() {
 			return anim.getNextFrame();
+		}
+		
+		public BufferedImage getFrame() {
+			return anim.getCurrentFrame();
 		}
 	};
 	
 	private InputMethod input;
 	private int index = 0;
 	private CharacterMenu parent;
+	private boolean ready = false;
 
 	public CharSelectFrame(double x, double y, CharacterMenu parent) {
 		super((int)x, (int)y, WIDTH, HEIGHT);
@@ -120,30 +130,40 @@ class CharSelectFrame extends MenuFrame {
 		if(input != null) {
 			boolean special = input.special();
 			boolean attack = input.activate();
+			boolean menu = input.menu();
 			double xAxis = input.stickL()[0];
 			if(!hold) {
-				if(xAxis > 0) {
-					index = (index+1)%Character.values().length;
-					hold = true;
-				}
-				else if(xAxis < 0) {
-					index--;
-					if(index < 0)
-						index += Character.values().length;
-					hold = true;
+				if(!ready) {
+					if(xAxis > 0) {
+						index = (index+1)%Character.values().length;
+						hold = true;
+					}
+					else if(xAxis < 0) {
+						index--;
+						if(index < 0)
+							index += Character.values().length;
+						hold = true;
+					}
 				}
 				
 				if(special) {
 					parent.addInput(input);
 					input = null;
+					ready = false;
+					hold = true;
 				}
 				
 				if(attack) {
+					ready = !ready;
+					hold = true;
+				}
+				
+				if(menu) {
 					parent.closeAndBuildPlayers();
 				}
 			}
 			
-			if(!special && !attack && xAxis == 0)
+			if(!special && !attack && !menu && xAxis == 0)
 				hold = false;
 		}
 	}
@@ -178,8 +198,17 @@ class CharSelectFrame extends MenuFrame {
 			Rectangle2D size = g.getFont().getStringBounds(message, g.getFontRenderContext());
 			g.drawString(message, (int)(frame.getCenterX() - (size.getWidth()/2)), (int)(frame.getCenterY() - (size.getHeight()/2)));
 		} else {
-			BufferedImage sprite = Character.values()[index].getFrame();
-			g.drawImage(sprite, (int) (frame.getCenterX() - sprite.getWidth()/2), (int) (frame.getCenterY() - sprite.getWidth()/2), null);
+			BufferedImage sprite;
+			if(ready) {
+				sprite = Character.values()[index].getFrame();
+				g.drawString("Ready!", (int) (frame.getCenterX() - sprite.getWidth()/2 - 10), (int) (frame.getCenterY() + sprite.getHeight()/2 + 5));
+			} else
+				sprite = Character.values()[index].getNext();
+			g.drawImage(sprite, (int) (frame.getCenterX() - sprite.getWidth()/2), (int) (frame.getCenterY() - sprite.getHeight()/2), null);
 		}
+	}
+	
+	public boolean isReady() {
+		return (input == null) || ready;
 	}
 }

@@ -198,8 +198,8 @@ public class Game extends JFrame {
 		//draw player health bars
 		for(Player p : players) {
 			int[] c = p.getScreenCoords();
-			c[0] -= Player.MAX_HEALTH/3;
-			c[1] += Tile.TILE_HEIGHT/2;
+			c[0] -= Player.MAX_HEALTH/4;
+			c[1] += Tile.TILE_HEIGHT/2+10;
 			int h = p.getHealth();
 			
 			if(h < Player.MAX_HEALTH/4)
