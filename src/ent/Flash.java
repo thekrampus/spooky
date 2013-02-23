@@ -17,9 +17,8 @@ public class Flash extends Entity{
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		timer--;
-		return true;
 	}
 	
 	@Override

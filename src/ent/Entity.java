@@ -31,7 +31,7 @@ public abstract class Entity implements Comparable<Entity> {
 	 * @param l
 	 *            the Level the entity is acting in
 	 */
-	public boolean update(Level l) {
+	public void update(Level l) {
 		
 		xCoord += xVel;
 		if (!l.isInBounds(xCoord, yCoord)) {
@@ -46,8 +46,6 @@ public abstract class Entity implements Comparable<Entity> {
 			yVel = 0;
 		} else
 			yVel *= friction;
-		
-		return true;
 	}
 
 	/**

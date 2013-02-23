@@ -25,7 +25,7 @@ public abstract class Portal extends Enemy {
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		ArrayList<Entity> hazards = l.getEnemyHazards();
 		for(Entity ent : hazards) {
 			if(this.getDistance(ent) < radius)
@@ -52,8 +52,6 @@ public abstract class Portal extends Enemy {
 				i--;
 			}
 		}
-		
-		return true;
 	}
 	
 	@Override

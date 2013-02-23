@@ -26,15 +26,13 @@ public class Attack extends Entity {
 	}
 
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		xCoord += xVel;
 		yCoord += yVel;
 		range -= step;
 
 		if (!l.isInBounds(xCoord, yCoord))
 			range = 0;
-		
-		return true;
 	}
 	
 	@Override

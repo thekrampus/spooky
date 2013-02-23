@@ -19,14 +19,12 @@ public class Enemy extends Entity {
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		ArrayList<Entity> hazards = l.getEnemyHazards();
 		for(Entity ent : hazards) {
 			if(this.getDistance(ent) < radius)
 				health -= ent.getDamage();
 		}
-		
-		return super.update(l);
 	}
 	
 	@Override

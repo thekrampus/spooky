@@ -19,7 +19,7 @@ public class Stairs extends Entity {
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		ArrayList<Player> players = l.getPlayers();
 		
 		int ready = 0;
@@ -34,8 +34,6 @@ public class Stairs extends Entity {
 		
 		if(ready+dead == players.size() && ready > 0)
 			Game.nextLevel();
-		
-		return true;
 	}
 	
 	@Override

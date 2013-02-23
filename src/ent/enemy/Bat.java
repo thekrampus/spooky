@@ -17,14 +17,12 @@ public class Bat extends Enemy {
 	}
 	
 	@Override
-	public boolean update(Level l) {
+	public void update(Level l) {
 		this.impulse((Math.random()-.5)*speed, (Math.random()-.5)*speed);
 		if(xVel < -.05)
 			facingLeft = true;
 		else if(xVel > .05)
 			facingLeft = false;
-		
-		return super.update(l);
 	}
 	
 	@Override
